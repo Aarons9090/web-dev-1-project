@@ -2,10 +2,12 @@ const http = require('http')
 const url = require('url')
 const config = require('./utils/config')
 const mongoose = require('mongoose')
-const userService = require('./services/user-service')
+const { requestLogger } = require('./utils/middleware')
+const UserService = require('./services/user-service')
 
 const hostname = '127.0.0.1'
 const port = config.PORT
+const userService = new UserService()
 
 mongoose
   .connect(config.MONGOURL, {
@@ -24,44 +26,22 @@ mongoose
   })
 
 const server = http.createServer(async (req, res) => {
-  const parsedUrl = url.parse(req.url, true)
-  const path = parsedUrl.pathname
+  requestLogger(req, res, async () => {
+    const parsedUrl = url.parse(req.url, true)
+    const path = parsedUrl.pathname
 
-  let requestBody = ''
+    res.setHeader('Content-Type', 'application/json')
 
-  req.on('data', (chunk) => {
-    requestBody += chunk.toString()
-  })
-
-  res.setHeader('Content-Type', 'application/json')
-  if (req.method === 'POST' && path === '/api/users') {
-    req.on('end', async () => {
-      try {
-        const userData = JSON.parse(requestBody)
-        const user = await userService.createUser(userData)
-        res.statusCode = 201
-        res.end(JSON.stringify(user))
-      } catch (error) {
-        res.statusCode = 400
-        res.body = { error: error.message }
-        res.end()
-      }
-    })
-  } else if (req.method === 'GET' && path === '/api/users') {
-    try {
-      const users = await userService.getUsers()
-      res.statusCode = 200
-      res.end(JSON.stringify(users))
-    } catch (error) {
-      res.statusCode = 400
-      res.body = { error: error.message }
+    if (req.method === 'POST' && path === '/api/users') {
+      await userService.createUser(req, res)
+    } else if (req.method === 'GET' && path === '/api/users') {
+      await userService.getUsers(req, res)
+    } else {
+      res.statusCode = 404
+      res.body = { error: 'Not found' }
       res.end()
     }
-  } else {
-    res.statusCode = 404
-    res.body = { error: 'Not found' }
-    res.end()
-  }
+  })
 })
 
 server.listen(port, hostname, () => {
