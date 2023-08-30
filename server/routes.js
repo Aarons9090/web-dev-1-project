@@ -1,9 +1,17 @@
 const { requestLogger } = require('./utils/middleware')
 const UserService = require('./services/UserService')
-const { UserWithIdPath, UserPath } = require('./utils/constants')
+const ProductService = require('./services/ProductService')
+const {
+  UserWithIdPath,
+  UserPath,
+  ProductPath,
+  ProductWithIdPath,
+} = require('./utils/constants')
 const url = require('url')
+const { respondJson } = require('./utils/helpers')
 
 const userService = new UserService()
+const productService = new ProductService()
 
 function handleRequest(req, res) {
   requestLogger(req, res, async () => {
@@ -11,6 +19,7 @@ function handleRequest(req, res) {
 
     res.setHeader('Content-Type', 'application/json')
 
+    // Users
     if (req.method === 'POST' && path === UserPath) {
       await userService.createUser(req, res)
     } else if (req.method === 'GET' && path === UserPath) {
@@ -21,10 +30,20 @@ function handleRequest(req, res) {
       await userService.updateUser(req, res)
     } else if (req.method === 'DELETE' && path.match(UserWithIdPath)) {
       await userService.deleteUser(req, res)
+    }
+    // Products
+    else if (req.method === 'GET' && path === ProductPath) {
+      await productService.getProducts(req, res)
+    } else if (req.method === 'GET' && path.match(ProductWithIdPath)) {
+      await productService.getProductById(req, res)
+    } else if (req.method === 'POST' && path === ProductPath) {
+      await productService.createProduct(req, res)
+    } else if (req.method === 'PUT' && path.match(ProductWithIdPath)) {
+      await productService.updateProduct(req, res)
+    } else if (req.method === 'DELETE' && path.match(ProductWithIdPath)) {
+      await productService.deleteProduct(req, res)
     } else {
-      res.statusCode = 404
-      res.body = { error: 'Not found' }
-      res.end()
+      respondJson(res, 404, { error: 'Route not found' })
     }
   })
 }

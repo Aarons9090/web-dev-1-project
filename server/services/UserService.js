@@ -95,7 +95,7 @@ class UserService {
     const id = getIdFromUrl(req.url)
     try {
       await User.findByIdAndDelete(id)
-      respondJson(res, 204, null)
+      respondJson(res, 200, null)
     } catch (error) {
       respondJson(res, 400, { error: error.message })
     }
