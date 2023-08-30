@@ -1,17 +1,24 @@
 const User = require('../models/user')
 const Role = require('../models/role')
-const { getRequestBodyJson, getIdFromUrl } = require('../utils/helpers')
+const {
+  getRequestBodyJson,
+  getIdFromUrl,
+  respondJson,
+} = require('../utils/helpers')
 
 class UserService {
   async getUsers(req, res) {
     try {
       const users = await User.find({})
-      res.statusCode = 200
-      res.end(JSON.stringify(users))
+      const usersWithRole = await Promise.all(
+        users.map(async (user) => {
+          const userWithRole = await user.populate('role')
+          return userWithRole
+        })
+      )
+      respondJson(res, 200, usersWithRole)
     } catch (error) {
-      res.statusCode = 400
-      res.body = { error: error.message }
-      res.end()
+      respondJson(res, 400, { error: error.message })
     }
   }
 
@@ -21,17 +28,12 @@ class UserService {
       const user = await User.findById(id).populate('role')
 
       if (!user) {
-        res.statusCode = 404
-        res.body = { error: 'User not found' }
-        res.end()
+        respondJson(res, 404, { error: 'User not found' })
         return
       }
-      res.statusCode = 200
-      res.end(JSON.stringify(user))
+      respondJson(res, 200, user)
     } catch (error) {
-      res.statusCode = 400
-      res.body = { error: error.message }
-      res.end()
+      respondJson(res, 400, { error: error.message })
     }
   }
 
@@ -44,9 +46,7 @@ class UserService {
       const userRole = await Role.findOne({ name: roleName })
 
       if (!userRole) {
-        res.statusCode = 400
-        res.body = { error: 'Role not found' }
-        res.end()
+        respondJson(res, 400, { error: 'Role not found' })
         return
       }
 
@@ -57,12 +57,9 @@ class UserService {
       })
 
       const savedUser = await (await newUser.populate('role')).save()
-      res.statusCode = 201
-      res.end(JSON.stringify(savedUser))
+      respondJson(res, 201, savedUser)
     } catch (error) {
-      res.statusCode = 400
-      res.body = { error: error.message }
-      res.end()
+      respondJson(res, 400, { error: error.message })
     }
   }
 
@@ -76,17 +73,12 @@ class UserService {
       }).populate('role')
 
       if (!user) {
-        res.statusCode = 404
-        res.body = { error: 'User not found' }
-        res.end()
+        respondJson(res, 404, { error: 'User not found' })
         return
       }
-      res.statusCode = 200
-      res.end(JSON.stringify(user))
+      respondJson(res, 200, user)
     } catch (error) {
-      res.statusCode = 400
-      res.body = { error: error.message }
-      res.end()
+      respondJson(res, 400, { error: error.message })
     }
   }
 
@@ -94,12 +86,9 @@ class UserService {
     const id = getIdFromUrl(req.url)
     try {
       await User.findByIdAndDelete(id)
-      res.statusCode = 204
-      res.end()
+      respondJson(res, 204, null)
     } catch (error) {
-      res.statusCode = 400
-      res.body = { error: error.message }
-      res.end()
+      respondJson(res, 400, { error: error.message })
     }
   }
 }

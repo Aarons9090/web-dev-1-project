@@ -26,7 +26,13 @@ function getIdFromUrl(url) {
   return urlParts[urlParts.length - 1]
 }
 
+function respondJson(res, statusCode, data) {
+  res.statusCode = statusCode
+  res.end(JSON.stringify(data))
+}
+
 module.exports = {
   getRequestBodyJson,
   getIdFromUrl,
+  respondJson,
 }
