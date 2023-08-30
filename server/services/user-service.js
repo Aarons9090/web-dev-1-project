@@ -1,6 +1,6 @@
 const User = require('../models/user')
 const Role = require('../models/role')
-const { getRequestBody } = require('../utils/helpers')
+const { getRequestBodyJson, getIdFromUrl } = require('../utils/helpers')
 
 class UserService {
   async getUsers(req, res) {
@@ -18,8 +18,7 @@ class UserService {
   async createUser(req, res) {
     res.setHeader('Content-Type', 'application/json')
     try {
-      const requestBody = await getRequestBody(req)
-      const userData = JSON.parse(requestBody)
+      const userData = await getRequestBodyJson(req)
 
       const { username, password, roleName } = userData
       const userRole = await Role.findOne({ name: roleName })
@@ -40,6 +39,43 @@ class UserService {
       const savedUser = await (await newUser.populate('role')).save()
       res.statusCode = 201
       res.end(JSON.stringify(savedUser))
+    } catch (error) {
+      res.statusCode = 400
+      res.body = { error: error.message }
+      res.end()
+    }
+  }
+
+  async updateUser(req, res) {
+    const id = getIdFromUrl(req.url)
+
+    const userData = await getRequestBodyJson(req)
+    try {
+      const user = await User.findByIdAndUpdate(id, userData, {
+        new: true,
+      }).populate('role')
+
+      if (!user) {
+        res.statusCode = 404
+        res.body = { error: 'User not found' }
+        res.end()
+        return
+      }
+      res.statusCode = 200
+      res.end(JSON.stringify(user))
+    } catch (error) {
+      res.statusCode = 400
+      res.body = { error: error.message }
+      res.end()
+    }
+  }
+
+  async deleteUser(req, res) {
+    const id = getIdFromUrl(req.url)
+    try {
+      await User.findByIdAndDelete(id)
+      res.statusCode = 204
+      res.end()
     } catch (error) {
       res.statusCode = 400
       res.body = { error: error.message }

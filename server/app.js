@@ -36,6 +36,16 @@ const server = http.createServer(async (req, res) => {
       await userService.createUser(req, res)
     } else if (req.method === 'GET' && path === '/api/users') {
       await userService.getUsers(req, res)
+    } else if (
+      req.method === 'PUT' &&
+      path.match(/^\/api\/users\/[a-zA-Z0-9]+$/)
+    ) {
+      await userService.updateUser(req, res)
+    } else if (
+      req.method === 'DELETE' &&
+      path.match(/^\/api\/users\/[a-zA-Z0-9]+$/)
+    ) {
+      await userService.deleteUser(req, res)
     } else {
       res.statusCode = 404
       res.body = { error: 'Not found' }

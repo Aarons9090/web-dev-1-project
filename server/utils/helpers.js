@@ -1,4 +1,4 @@
-async function getRequestBody(req) {
+async function getRequestBodyJson(req) {
   return new Promise((resolve, reject) => {
     let requestBody = ''
 
@@ -7,7 +7,12 @@ async function getRequestBody(req) {
     })
 
     req.on('end', () => {
-      resolve(requestBody)
+      try {
+        const jsonData = JSON.parse(requestBody)
+        resolve(jsonData)
+      } catch (error) {
+        reject(error)
+      }
     })
 
     req.on('error', (err) => {
@@ -16,6 +21,12 @@ async function getRequestBody(req) {
   })
 }
 
+function getIdFromUrl(url) {
+  const urlParts = url.split('/')
+  return urlParts[urlParts.length - 1]
+}
+
 module.exports = {
-  getRequestBody,
+  getRequestBodyJson,
+  getIdFromUrl,
 }
