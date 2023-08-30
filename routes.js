@@ -19,8 +19,17 @@ function handleRequest(req, res) {
 
     res.setHeader('Content-Type', 'application/json')
 
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Accept')
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE')
+    res.setHeader('Access-Control-Allow-Origin', 'http://192.168.1.214:8080')
+
+    if (req.method === 'OPTIONS') {
+      res.writeHead(200)
+      res.end()
+      return
+    }
     // Users
-    if (req.method === 'POST' && path === UserPath) {
+    else if (req.method === 'POST' && path === UserPath) {
       await userService.createUser(req, res)
     } else if (req.method === 'GET' && path === UserPath) {
       await userService.getUsers(req, res)
