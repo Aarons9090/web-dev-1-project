@@ -27,14 +27,14 @@ const server = http.createServer(async (req, res) => {
   const parsedUrl = url.parse(req.url, true)
   const path = parsedUrl.pathname
 
+  let requestBody = ''
+
+  req.on('data', (chunk) => {
+    requestBody += chunk.toString()
+  })
+
   res.setHeader('Content-Type', 'application/json')
   if (req.method === 'POST' && path === '/api/users') {
-    let requestBody = ''
-
-    req.on('data', (chunk) => {
-      requestBody += chunk.toString()
-    })
-
     req.on('end', async () => {
       try {
         const userData = JSON.parse(requestBody)
@@ -47,6 +47,16 @@ const server = http.createServer(async (req, res) => {
         res.end()
       }
     })
+  } else if (req.method === 'GET' && path === '/api/users') {
+    try {
+      const users = await userService.getUsers()
+      res.statusCode = 200
+      res.end(JSON.stringify(users))
+    } catch (error) {
+      res.statusCode = 400
+      res.body = { error: error.message }
+      res.end()
+    }
   } else {
     res.statusCode = 404
     res.body = { error: 'Not found' }
