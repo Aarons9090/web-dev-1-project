@@ -1,9 +1,9 @@
 const http = require('http')
 const url = require('url')
-const config = require('./utils/config')
 const mongoose = require('mongoose')
+const config = require('./utils/config')
 const { requestLogger } = require('./utils/middleware')
-const UserService = require('./services/user-service')
+const UserService = require('./services/UserService')
 const { UserWithIdPath, UserPath } = require('./utils/constants')
 
 const hostname = '127.0.0.1'
