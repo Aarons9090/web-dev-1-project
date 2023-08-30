@@ -37,6 +37,11 @@ const server = http.createServer(async (req, res) => {
     } else if (req.method === 'GET' && path === '/api/users') {
       await userService.getUsers(req, res)
     } else if (
+      req.method === 'GET' &&
+      path.match(/^\/api\/users\/[a-zA-Z0-9]+$/)
+    ) {
+      await userService.getUserById(req, res)
+    } else if (
       req.method === 'PUT' &&
       path.match(/^\/api\/users\/[a-zA-Z0-9]+$/)
     ) {

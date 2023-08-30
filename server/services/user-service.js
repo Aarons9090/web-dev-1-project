@@ -15,6 +15,26 @@ class UserService {
     }
   }
 
+  async getUserById(req, res) {
+    const id = getIdFromUrl(req.url)
+    try {
+      const user = await User.findById(id).populate('role')
+
+      if (!user) {
+        res.statusCode = 404
+        res.body = { error: 'User not found' }
+        res.end()
+        return
+      }
+      res.statusCode = 200
+      res.end(JSON.stringify(user))
+    } catch (error) {
+      res.statusCode = 400
+      res.body = { error: error.message }
+      res.end()
+    }
+  }
+
   async createUser(req, res) {
     res.setHeader('Content-Type', 'application/json')
     try {
