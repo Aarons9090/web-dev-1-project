@@ -1,3 +1,5 @@
+const mongoose = require('mongoose')
+const config = require('./config')
 async function getRequestBodyJson(req) {
   return new Promise((resolve, reject) => {
     let requestBody = ''
@@ -31,8 +33,27 @@ function respondJson(res, statusCode, data) {
   res.end(JSON.stringify(data))
 }
 
+function loadDb() {
+  mongoose
+    .connect(config.MONGOURL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => {
+      //TODO: logger middleware
+      // eslint-disable-next-line no-console
+      console.log('Connected to MongoDB')
+    })
+    .catch((error) => {
+      //TODO: logger middleware
+      // eslint-disable-next-line no-console
+      console.error('Error connecting to MongoDB:', error.message)
+    })
+}
+
 module.exports = {
   getRequestBodyJson,
   getIdFromUrl,
   respondJson,
+  loadDb,
 }
