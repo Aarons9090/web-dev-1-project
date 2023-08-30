@@ -68,9 +68,18 @@ class UserService {
 
     const userData = await getRequestBodyJson(req)
     try {
-      const user = await User.findByIdAndUpdate(id, userData, {
-        new: true,
-      }).populate('role')
+      const role = await Role.findOne({ name: userData.roleName })
+      if (!role) {
+        respondJson(res, 400, { error: 'Role not found' })
+        return
+      }
+      const user = await User.findByIdAndUpdate(
+        id,
+        { ...userData, role: role._id },
+        {
+          new: true,
+        }
+      ).populate('role')
 
       if (!user) {
         respondJson(res, 404, { error: 'User not found' })
