@@ -17,6 +17,7 @@ async function displayUsers() {
 
   users.forEach((user) => {
     const userElement = document.createElement('div')
+    userElement.classList.add('user')
     userElement.textContent = `Username: ${user.username}, Role: ${user.role.name}`
     userListContainer.appendChild(userElement)
   })
