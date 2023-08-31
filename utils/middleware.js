@@ -10,7 +10,7 @@ function requestLogger(req, res, next) {
 
   req.on('end', () => {
     console.log(`[${new Date().toISOString()}] ${method} ${url}`)
-    console.log('Request Body:', requestBody)
+    requestBody && console.log('Request Body:', requestBody)
   })
   next()
 }

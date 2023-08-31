@@ -1,15 +1,9 @@
 const productListContainer = document.getElementById('productList')
 const productInfoContainer = document.getElementById('productInfo')
-//TODO: put the fetch calls in a separate file
+
 async function fetchProducts() {
   try {
-    const response = await fetch('http://127.0.0.1:3000/api/products', {
-      headers: {
-        Authorization: `Bearer ${
-          JSON.parse(localStorage.getItem('user')).token
-        }`,
-      },
-    })
+    const response = await fetchUrl('/products', 'GET')
     const products = await response.json()
     return products
   } catch (error) {
@@ -20,16 +14,7 @@ async function fetchProducts() {
 async function fetchProduct() {
   try {
     const productId = window.history.state
-    const response = await fetch(
-      `http://127.0.0.1:3000/api/products/${productId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${
-            JSON.parse(localStorage.getItem('user')).token
-          }`,
-        },
-      }
-    )
+    const response = await fetchUrl(`/products/${productId}`, 'GET')
     const product = await response.json()
     return product
   } catch (error) {

@@ -3,16 +3,15 @@ const passwordInput = document.getElementById('password')
 
 async function register() {
   try {
-    const response = await fetch('http://127.0.0.1:3000/api/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    const response = await fetchUrl(
+      '/register',
+      'POST',
+      {
         username: usernameInput.value,
         password: passwordInput.value,
-      }),
-    })
+      },
+      false
+    )
     const user = await response.json()
 
     if (user.error) {

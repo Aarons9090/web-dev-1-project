@@ -1,20 +1,18 @@
-//Q: my linter thinks that this is not being used even though it is being used in other js files
-//A: I think it's because it's being used in the html files, not the js files
+const baseUrl = 'http://127.0.0.1:3000/api'
 
 async function login() {
   const usernameInput = document.getElementById('username')
   const passwordInput = document.getElementById('password')
   try {
-    const response = await fetch('http://127.0.0.1:3000/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    const response = await fetchUrl(
+      '/login',
+      'POST',
+      {
         username: usernameInput.value,
         password: passwordInput.value,
-      }),
-    })
+      },
+      false
+    )
 
     const user = await response.json()
 
@@ -25,6 +23,24 @@ async function login() {
 
     localStorage.setItem('user', JSON.stringify(user))
     window.location.href = '/'
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function fetchUrl(url, method, body = null, isAuthenticated = true) {
+  try {
+    const response = await fetch(`${baseUrl}${url}`, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: isAuthenticated
+          ? `Bearer ${JSON.parse(localStorage.getItem('user')).token}`
+          : '',
+      },
+      body: body ? JSON.stringify(body) : null,
+    })
+    return response
   } catch (error) {
     console.log(error)
   }
