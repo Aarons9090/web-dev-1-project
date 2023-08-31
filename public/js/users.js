@@ -2,7 +2,18 @@ const userListContainer = document.getElementById('userList')
 
 async function fetchUsers() {
   try {
-    const response = await fetch('http://127.0.0.1:3000/api/users')
+    //Q: how do i add the authorization header?
+    //A: add the header to the fetch call
+    //Q: how do i get the token?
+    //A: get the token from localStorage
+
+    const response = await fetch('http://127.0.0.1:3000/api/users', {
+      headers: {
+        Authorization: `Bearer ${
+          JSON.parse(localStorage.getItem('user')).token
+        }`,
+      },
+    })
     const users = await response.json()
     return users
   } catch (error) {
