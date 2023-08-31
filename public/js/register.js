@@ -2,7 +2,6 @@ const usernameInput = document.getElementById('username')
 const passwordInput = document.getElementById('password')
 
 async function register() {
-  console.log('register')
   try {
     const response = await fetch('http://127.0.0.1:3000/api/register', {
       method: 'POST',
@@ -15,8 +14,13 @@ async function register() {
       }),
     })
     const user = await response.json()
-    localStorage.setItem('user', JSON.stringify(user))
-    window.location.href = '/'
+
+    if (user.error) {
+      console.log(user.error)
+      return
+    }
+
+    login()
   } catch (error) {
     console.log(error)
   }

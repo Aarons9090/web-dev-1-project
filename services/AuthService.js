@@ -56,6 +56,7 @@ class AuthService {
 
   async register(req, res) {
     try {
+      console.log('🚀 ~ AuthService ~ register ~ req:', 'asdasdas')
       const userData = await getRequestBodyJson(req)
 
       const { username, password } = userData
@@ -94,6 +95,7 @@ class AuthService {
         password: passwordHash,
         role: userRole.id,
       })
+      console.log('🚀 ~ AuthService ~ register ~ user:', user)
 
       const savedUser = await user.save()
 
@@ -102,6 +104,21 @@ class AuthService {
       respondJson(res, 400, {
         error: error.message,
       })
+    }
+  }
+
+  async isUserLoggedIn(req, res) {
+    const authHeader = req.headers.authorization
+    if (!authHeader || !authHeader.toLowerCase().startsWith('bearer ')) {
+      respondJson(res, 401, { error: 'Token missing or invalid' })
+      return
+    }
+    const token = authHeader.substring(7)
+    console.log(token, config.SECRET)
+    const decodedToken = jwt.verify(token, config.SECRET)
+    if (!decodedToken.id) {
+      respondJson(res, 401, { error: 'Token missing or invalid' })
+      return
     }
   }
 }

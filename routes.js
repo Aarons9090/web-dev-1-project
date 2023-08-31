@@ -1,6 +1,4 @@
 const { requestLogger } = require('./utils/middleware')
-const jwt = require('jsonwebtoken')
-const config = require('./utils/config')
 const UserService = require('./services/UserService')
 const ProductService = require('./services/ProductService')
 const {
@@ -30,23 +28,13 @@ function handleRequest(req, res) {
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE')
     res.setHeader('Access-Control-Allow-Origin', 'http://192.168.1.214:8080')
 
-    // check if user is logged in
+    // check that user is logged in
     if (
       req.method !== 'OPTIONS' &&
       path !== '/api/login' &&
       path !== '/api/register'
     ) {
-      const authHeader = req.headers.authorization
-      if (!authHeader || !authHeader.toLowerCase().startsWith('bearer ')) {
-        respondJson(res, 401, { error: 'Token missing or invalid' })
-        return
-      }
-      const token = authHeader.substring(7)
-      const decodedToken = jwt.verify(token, config.SECRET)
-      if (!decodedToken.id) {
-        respondJson(res, 401, { error: 'Token missing or invalid' })
-        return
-      }
+      authService.isUserLoggedIn(req, res)
     }
 
     if (req.method === 'OPTIONS') {
