@@ -17,3 +17,24 @@ header {
   background-color: #f1f1f1;
   padding: 20px;
 }
+
+.new-product {
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  padding: 20px;
+}
+
+.new-product>input {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.new-product>button {
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #ccc;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}

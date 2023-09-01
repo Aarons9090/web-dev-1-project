@@ -16,6 +16,28 @@
   </header>
   <div id="productList"></div>
   <div id="productInfo"></div>
+
+  <template id="product-template">
+    <div class="product">
+      <h4 class="product-name"></h4>
+      <p class="product-price"></p>
+      <p class="product-description"></p>
+    </div>
+  </template>
+
+  <template id="new-product-form">
+    <div class="new-product">
+      <h4>New project</h4>
+      <p>Name</p>
+      <input type="text" id="name" />
+      <p>Price</p>
+      <input type="number" id="price" />
+      <p>Description</p>
+      <input type="text" id="description" />
+      <button id="add-product">Add</button>
+    </div>
+  </template>
+
   <script src="./js/products.js"></script>
   <script src="./js/logout.js"></script>
   <script src="./js/shared.js"></script>
