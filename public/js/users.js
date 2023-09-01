@@ -23,4 +23,11 @@ async function displayUsers() {
   })
 }
 
-window.addEventListener('load', displayUsers)
+window.addEventListener('load', async () => {
+  if (!(await isUserAdmin())) {
+    window.location.href = '/'
+    return
+  }
+
+  displayUsers()
+})

@@ -59,3 +59,8 @@ async function getUserRole() {
     console.log(error)
   }
 }
+
+async function isUserAdmin() {
+  const role = await getUserRole()
+  return role.role === 'Admin'
+}
