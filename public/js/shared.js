@@ -45,3 +45,17 @@ async function fetchUrl(url, method, body = null, isAuthenticated = true) {
     console.log(error)
   }
 }
+
+async function getUserRole() {
+  try {
+    const response = await fetchUrl('/role', 'GET')
+    const role = await response.json()
+    if (role.error) {
+      console.log(role.error)
+      return
+    }
+    return role
+  } catch (error) {
+    console.log(error)
+  }
+}

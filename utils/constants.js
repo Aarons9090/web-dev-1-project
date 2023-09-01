@@ -10,5 +10,6 @@ module.exports = {
   ProductPath: `${defaultPath}/products`,
   UserWithIdPath: /^\/api\/users\/[a-zA-Z0-9]+$/,
   ProductWithIdPath: /^\/api\/products\/[a-zA-Z0-9]+$/,
+  AuthWithIdPath: /^\/api\/auth\/[a-zA-Z0-9]+$/,
   WebTokenExpirationSeconds: 60 * 60,
 }

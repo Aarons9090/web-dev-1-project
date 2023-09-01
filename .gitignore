@@ -3,4 +3,4 @@ node_modules
 .prettierrc
 .eslintrc*
 package-lock.json
-
+*.txt

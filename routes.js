@@ -6,6 +6,7 @@ const {
   UserPath,
   ProductPath,
   ProductWithIdPath,
+  AuthWithIdPath,
 } = require('./utils/constants')
 const url = require('url')
 const { respondJson } = require('./utils/helpers')
@@ -72,6 +73,8 @@ function handleRequest(req, res) {
       await authService.login(req, res)
     } else if (req.method === 'POST' && path === '/api/register') {
       await authService.register(req, res)
+    } else if (req.method === 'GET' && path === '/api/role') {
+      await authService.getUserRole(req, res)
     } else {
       respondJson(res, 404, { error: 'Route not found' })
     }

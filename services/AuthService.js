@@ -107,6 +107,27 @@ class AuthService {
 
   async isUserLoggedIn(req, res) {
     const authHeader = req.headers.authorization
+
+    if (!authHeader || !authHeader.toLowerCase().startsWith('bearer ')) {
+      respondJson(res, 401, { error: 'Token missing or invalid' })
+      return
+    }
+    const token = authHeader.substring(7)
+    try {
+      const decodedToken = jwt.verify(token, config.SECRET)
+      if (!decodedToken.id) {
+        respondJson(res, 401, { error: 'Token missing or invalid' })
+        return
+      }
+    } catch (error) {
+      respondJson(res, 401, { error: 'Token missing or invalid' })
+      return
+    }
+  }
+
+  async getUserRole(req, res) {
+    const authHeader = req.headers.authorization
+
     if (!authHeader || !authHeader.toLowerCase().startsWith('bearer ')) {
       respondJson(res, 401, { error: 'Token missing or invalid' })
       return
@@ -117,6 +138,12 @@ class AuthService {
       respondJson(res, 401, { error: 'Token missing or invalid' })
       return
     }
+    const user = await User.findById(decodedToken.id).populate('role')
+    if (!user) {
+      respondJson(res, 401, { error: 'Token missing or invalid' })
+      return
+    }
+    respondJson(res, 200, { role: user.role.name })
   }
 }
 
