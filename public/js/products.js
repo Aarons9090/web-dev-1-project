@@ -35,14 +35,17 @@ async function displaySingleProduct() {
 
 async function displayProducts() {
   const products = await fetchProducts()
-
+  const isAdmin = await isUserAdmin()
   productListContainer.innerHTML = ''
   productInfoContainer.innerHTML = ''
 
+  if (isAdmin) {
+    createNewProductDiv()
+  }
+
   products.forEach(async (product) => {
     const productElement = createProductElement(product)
-
-    if (await isUserAdmin()) {
+    if (isAdmin) {
       const editContainer = createEditContainer(product)
       const showEditContainerButton = createShowEditButton(editContainer)
       productElement.appendChild(editContainer)
@@ -50,6 +53,39 @@ async function displayProducts() {
     }
     productListContainer.appendChild(productElement)
   })
+}
+
+function createNewProductDiv() {
+  const addProductDiv = document.createElement('div')
+  const productNameField = createInput('text', '')
+  const productPriceField = createInput('text', '')
+  const productDescriptionField = createInput('text', '')
+  const addProductButton = document.createElement('button')
+  addProductButton.textContent = 'Add'
+  addProductButton.onclick = async () => {
+    await fetchUrl('/products', 'POST', {
+      name: productNameField.value,
+      price: productPriceField.value,
+      description: productDescriptionField.value,
+    })
+    displayProducts()
+  }
+  addProductDiv.innerHTML = '<h4>Add new product</h4>'
+
+  addProductDiv.appendChild(document.createTextNode('name'))
+  addProductDiv.appendChild(productNameField)
+  addProductDiv.appendChild(document.createElement('br'))
+
+  addProductDiv.appendChild(document.createTextNode('price'))
+  addProductDiv.appendChild(productPriceField)
+  addProductDiv.appendChild(document.createElement('br'))
+
+  addProductDiv.appendChild(document.createTextNode('description'))
+  addProductDiv.appendChild(productDescriptionField)
+  addProductDiv.appendChild(document.createElement('br'))
+
+  addProductDiv.appendChild(addProductButton)
+  productListContainer.appendChild(addProductDiv)
 }
 
 function createProductElement(product) {
