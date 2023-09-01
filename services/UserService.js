@@ -68,7 +68,8 @@ class UserService {
 
     const userData = await getRequestBodyJson(req)
     try {
-      const role = await Role.findOne({ name: userData.roleName })
+      const role = await Role.findOne({ name: userData.role })
+
       if (!role) {
         respondJson(res, 400, { error: 'Role not found' })
         return
