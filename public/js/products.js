@@ -26,7 +26,6 @@ async function displaySingleProduct() {
   const product = await fetchProduct()
 
   productInfoContainer.innerHTML = ''
-  productListContainer.innerHTML = ''
   const productElement = document.createElement('div')
   productElement.classList.add('product')
   productElement.textContent = `Name: ${product.name}, Price: ${product.price} ${product.description}`
@@ -36,7 +35,7 @@ async function displaySingleProduct() {
 async function displayProducts() {
   const products = await fetchProducts()
   const isAdmin = await isUserAdmin()
-  productListContainer.innerHTML = ''
+
   productInfoContainer.innerHTML = ''
 
   if (isAdmin) {
@@ -48,11 +47,15 @@ async function displayProducts() {
     if (isAdmin) {
       const editContainer = createEditContainer(product)
       const showEditContainerButton = createShowEditButton(editContainer)
-      productElement.querySelector('.product').appendChild(editContainer)
+
       productElement
-        .querySelector('.product')
+        .querySelector('.product-edit')
         .appendChild(showEditContainerButton)
+      productElement
+        .querySelector('.product-actions')
+        .appendChild(editContainer)
     }
+
     productListContainer.appendChild(productElement)
   })
 }
@@ -74,7 +77,7 @@ function createNewProductDiv() {
     displayProducts()
   }
 
-  productListContainer.appendChild(newProductDiv)
+  document.getElementById('new-product-container').appendChild(newProductDiv)
 }
 
 function createProductElement(product) {
@@ -95,6 +98,7 @@ function createProductElement(product) {
 
 function createEditContainer(product) {
   const editContainer = document.createElement('div')
+  editContainer.classList.add('edit-container')
   editContainer.style.display = 'none'
 
   const editNameField = createInput('text', product.name)
@@ -140,14 +144,18 @@ function createEditButton(product, nameField, priceField, descriptionField) {
 }
 
 function createShowEditButton(editContainer) {
-  const showEditContainerButton = document.createElement('button')
-  showEditContainerButton.textContent = 'Edit'
+  const showEditContainerButton = document.createElement('i')
+  showEditContainerButton.classList.add('material-icons')
+  showEditContainerButton.textContent = 'edit'
+  showEditContainerButton.style.cursor = 'pointer'
 
   showEditContainerButton.onclick = () => {
     editContainer.style.display =
-      editContainer.style.display === 'none' ? 'block' : 'none'
+      editContainer.style.display === 'none' ? 'flex' : 'none'
     showEditContainerButton.textContent =
-      showEditContainerButton.textContent === 'Edit' ? 'Hide' : 'Edit'
+      showEditContainerButton.textContent === 'edit'
+        ? 'keyboard_arrow_up'
+        : 'edit'
   }
 
   return showEditContainerButton

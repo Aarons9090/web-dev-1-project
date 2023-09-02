@@ -124,7 +124,7 @@ class AuthService {
       return
     }
   }
-
+  //TODO: yhteiset errorit
   async getUserRole(req, res) {
     const authHeader = req.headers.authorization
 
@@ -133,17 +133,23 @@ class AuthService {
       return
     }
     const token = authHeader.substring(7)
-    const decodedToken = jwt.verify(token, config.SECRET)
-    if (!decodedToken.id) {
+    try {
+      const decodedToken = jwt.verify(token, config.SECRET)
+
+      if (!decodedToken.id) {
+        respondJson(res, 401, { error: 'Token missing or invalid' })
+        return
+      }
+      const user = await User.findById(decodedToken.id).populate('role')
+      if (!user) {
+        respondJson(res, 401, { error: 'Token missing or invalid' })
+        return
+      }
+      respondJson(res, 200, { role: user.role.name })
+    } catch (error) {
       respondJson(res, 401, { error: 'Token missing or invalid' })
       return
     }
-    const user = await User.findById(decodedToken.id).populate('role')
-    if (!user) {
-      respondJson(res, 401, { error: 'Token missing or invalid' })
-      return
-    }
-    respondJson(res, 200, { role: user.role.name })
   }
 }
 

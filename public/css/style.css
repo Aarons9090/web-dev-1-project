@@ -1,32 +1,111 @@
+:root {
+  --primary-orange: #ff8c00;
+  --secondary-orange: #f1ae96;
+  --primary-blue: #00bfff;
+}
+
+body {
+  background-color: rgb(205, 243, 243);
+  font-family: 'Inter', Geneva, Tahoma, sans-serif;
+  margin: 0;
+}
+
 header {
-  background-color: #f1f1f1;
-  padding: 20px;
+  display: flex;
+  background-color: white;
   text-align: center;
+  padding: 20px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+a:-webkit-any-link {
+  text-decoration: none;
+  color: black;
+}
+
+a.current {
+  color: var(--primary-orange);
+}
+
+.title {
+  color: var(--primary-orange);
+  font-weight: 800;
+  font-size: 20px;
+}
+
+
+
+
+.links {
+  display: flex;
+  width: 300px;
+  justify-content: space-between;
 }
 
 .user {
   margin-top: 20px;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
+  background-color: white;
   padding: 20px;
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px;
+  background-color: white;
+  padding: 20px;
+}
+
+.product-header>* {
+  font-weight: bold;
+  width: 200px;
 }
 
 .product {
-  margin-top: 20px;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
+  margin: 5px;
+  background-color: white;
   padding: 20px;
 }
 
+.product-attributes {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+  width: 100%;
+}
+
+.product-attributes>* {
+  width: 200px;
+}
+
+.product-actions {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+  width: 100%;
+}
+
+.edit-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+  width: 100%;
+}
+
+.edit-container>* {
+  width: 200px;
+}
+
+
 .new-product {
   margin-top: 20px;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
+  background-color: white;
   padding: 20px;
 }
 
 .new-product>input {
-  border: 1px solid #ccc;
   padding: 10px;
   margin: 10px 0;
 }
@@ -35,6 +114,5 @@ header {
   padding: 10px;
   margin: 10px 0;
   background-color: #ccc;
-  border: 1px solid #ccc;
   cursor: pointer;
 }

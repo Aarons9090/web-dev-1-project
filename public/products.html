@@ -5,29 +5,54 @@
   <meta charset="UTF-8">
   <title>Shoppy</title>
   <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
   <header>
-    <h2>Shoppy store</h2>
+    <h2 class="title">Shoppy store</h2>
     <div id="links-container" class="links"></div>
-    <button id="logout">Log out</button>
-    <div id="role-name" class="role-name"></div>
+    <div class="user-actions">
+      <button id="logout">Log out</button>
+      <div id="role-name" class="role-name"></div>
+    </div>
   </header>
-  <div id="productList"></div>
+
+  <div id="productList">
+    <div id="new-product-container"></div>
+    <div id="product-header" class="product-header">
+      <span>Name</span>
+      <span>Price</span>
+      <span>Description</span>
+      <div></div>
+    </div>
+  </div>
   <div id="productInfo"></div>
 
   <template id="product-template">
     <div class="product">
-      <h4 class="product-name"></h4>
-      <p class="product-price"></p>
-      <p class="product-description"></p>
+      <div class="product-attributes">
+        <p class="product-name"></p>
+        <p class="product-price"></p>
+        <p class="product-description"></p>
+        <div class="product-edit"></div>
+      </div>
+      <div class="product-actions"></div>
     </div>
+
+
   </template>
 
   <template id="new-product-form">
     <div class="new-product">
-      <h4>New project</h4>
+      <h4>New product</h4>
       <p>Name</p>
       <input type="text" id="name" />
       <p>Price</p>
