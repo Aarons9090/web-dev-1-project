@@ -38,5 +38,5 @@ window.addEventListener('load', async () => {
 
   // display role name
   const linksContainer = document.getElementById('role-name')
-  linksContainer.innerHTML = role.role
+  linksContainer.innerHTML = `Logged in as ${role.role}`
 })

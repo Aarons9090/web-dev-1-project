@@ -43,14 +43,16 @@ async function displayProducts() {
   }
 
   products.forEach(async (product) => {
-    const productElement = createProductElement(product)
+    const productElement = await createProductElement(product)
+    const editContainer = createEditContainer(product)
+
     if (isAdmin) {
-      const editContainer = createEditContainer(product)
       const showEditContainerButton = createShowEditButton(editContainer)
 
       productElement
         .querySelector('.product-edit')
         .appendChild(showEditContainerButton)
+
       productElement
         .querySelector('.product-actions')
         .appendChild(editContainer)
@@ -80,7 +82,7 @@ function createNewProductDiv() {
   document.getElementById('new-product-container').appendChild(newProductDiv)
 }
 
-function createProductElement(product) {
+async function createProductElement(product) {
   const productTemplate = document.getElementById('product-template')
   const productElement = document.importNode(productTemplate.content, true)
   const productName = productElement.querySelector('.product-name')
@@ -88,6 +90,12 @@ function createProductElement(product) {
   const productDescription = productElement.querySelector(
     '.product-description'
   )
+  const editDiv = productElement.querySelector('.product-edit')
+  if (!(await isUserAdmin())) {
+    const buyButton = document.createElement('button')
+    buyButton.textContent = 'Buy'
+    editDiv.appendChild(buyButton)
+  }
 
   productName.textContent = product.name
   productPrice.textContent = product.price

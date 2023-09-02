@@ -1,6 +1,6 @@
 :root {
   --primary-orange: #ff8c00;
-  --secondary-orange: #f1ae96;
+  --secondary-orange: #ffe8e0;
   --primary-blue: #00bfff;
 }
 
@@ -34,8 +34,25 @@ a.current {
   font-size: 20px;
 }
 
+.user-actions {
+  padding-top: 20px;
+}
 
+.role-name {
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 12px;
+}
 
+.logout {
+  width: 100px;
+  height: 30px;
+  border: 1px solid var(--primary-orange);
+  background-color: var(--secondary-orange);
+  color: var(--primary-orange);
+  font-weight: 400;
+  cursor: pointer;
+}
 
 .links {
   display: flex;
@@ -83,7 +100,6 @@ a.current {
 .product-actions {
   display: flex;
   justify-content: space-between;
-  margin: 10px;
   width: 100%;
 }
 
