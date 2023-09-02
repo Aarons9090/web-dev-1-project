@@ -1,5 +1,6 @@
 const productListContainer = document.getElementById('productList')
 const productInfoContainer = document.getElementById('productInfo')
+const productHeader = document.getElementById('product-header')
 
 async function fetchProducts() {
   try {
@@ -26,9 +27,18 @@ async function displaySingleProduct() {
   const product = await fetchProduct()
 
   productInfoContainer.innerHTML = ''
-  const productElement = document.createElement('div')
-  productElement.classList.add('product')
-  productElement.textContent = `Name: ${product.name}, Price: ${product.price} ${product.description}`
+  productListContainer.innerHTML = ''
+  productHeader.style.display = 'none'
+  document.getElementById('new-product-container').innerHTML = ''
+  const productTemplate = document.getElementById('single-product-template')
+  const productElement = document.importNode(productTemplate.content, true)
+  productElement.querySelector('.product-name').textContent = product.name
+  productElement.querySelector(
+    '.product-price'
+  ).textContent = `${product.price} €`
+  productElement.querySelector('.product-description').textContent =
+    product.description
+
   productInfoContainer.appendChild(productElement)
 }
 
@@ -36,9 +46,11 @@ async function displayProducts() {
   const products = await fetchProducts()
   const isAdmin = await isUserAdmin()
 
+  productHeader.style.display = 'flex'
   productInfoContainer.innerHTML = ''
 
   if (isAdmin) {
+    document.getElementById('new-product-container').innerHTML = ''
     createNewProductDiv()
   }
 
@@ -93,14 +105,19 @@ async function createProductElement(product) {
   const editDiv = productElement.querySelector('.product-edit')
   if (!(await isUserAdmin())) {
     const buyButton = document.createElement('button')
-    buyButton.textContent = 'Buy'
+    buyButton.textContent = 'shopping_cart'
+    buyButton.classList.add('buy-button-small')
+    buyButton.classList.add('material-icons')
     editDiv.appendChild(buyButton)
   }
 
   productName.textContent = product.name
-  productPrice.textContent = product.price
+  productPrice.textContent = `${product.price} €`
   productDescription.textContent = product.description
-
+  productElement.querySelector('.product').onclick = () => {
+    window.history.pushState(product.id, '', `/products/${product.id}`)
+    displaySingleProduct()
+  }
   return productElement
 }
 

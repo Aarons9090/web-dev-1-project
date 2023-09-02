@@ -1,11 +1,10 @@
 :root {
   --primary-orange: #ff8c00;
   --secondary-orange: #ffe8e0;
-  --primary-blue: #00bfff;
 }
 
 body {
-  background-color: rgb(205, 243, 243);
+  background-color: rgb(240, 240, 240);
   font-family: 'Inter', Geneva, Tahoma, sans-serif;
   margin: 0;
 }
@@ -66,10 +65,21 @@ a.current {
   padding: 20px;
 }
 
+.products-container {
+  margin: 50px;
+}
+
+.single-product-container {
+  display: flex;
+}
+
+.product-info {
+  margin-left: 20px;
+}
+
 .product-header {
   display: flex;
   justify-content: space-between;
-  margin: 5px;
   background-color: white;
   padding: 20px;
 }
@@ -80,7 +90,7 @@ a.current {
 }
 
 .product {
-  margin: 5px;
+  margin-top: 5px;
   background-color: white;
   padding: 20px;
 }
@@ -101,6 +111,24 @@ a.current {
   display: flex;
   justify-content: space-between;
   width: 100%;
+}
+
+.buy-button-small {
+  color: var(--primary-orange);
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 30px;
+}
+
+.buy-button {
+  color: var(--primary-orange);
+  border: var(--primary-orange) 1px solid;
+  background-color: var(--secondary-orange);
+  border-radius: 20px;
+  cursor: pointer;
+  width: 150px;
+  height: 30px;
 }
 
 .edit-container {
