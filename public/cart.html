@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <title>Shoppy</title>
   <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/cart.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,8 +21,22 @@
       <div id="role-name" class="role-name"></div>
     </div>
   </header>
-  <div id="userList"></div>
-  <script src="./js/users.js"></script>
+  <div class="cart-container">
+    <div class="cart-items"></div>
+    <h2 class="cart-total"></h2>
+  </div>
+  <template class="cart-item-template">
+    <div class="cart-item">
+      <p class="cart-item-name"></p>
+      <p class="cart-item-price"></p>
+      <p class="cart-item-quantity"></p>
+      <div class="cart-item-actions">
+        <button class="remove-from-cart">Remove</button>
+      </div>
+    </div>
+  </template>
+
+  <script src="./js/cart.js"></script>
   <script src="./js/logout.js"></script>
   <script src="./js/shared.js"></script>
   <script src="./js/links.js"></script>

@@ -9,7 +9,10 @@ const productSchema = new mongoose.Schema({
 
 productSchema.set('toJSON', {
   transform: (document, returnedObj) => {
-    returnedObj.id = returnedObj._id.toString()
+    if (returnedObj._id) {
+      returnedObj.id = returnedObj._id.toString()
+    }
+
     delete returnedObj.__v
     delete returnedObj._id
   },

@@ -39,6 +39,10 @@ async function displaySingleProduct() {
   productElement.querySelector('.product-description').textContent =
     product.description
 
+  productElement.querySelector('.buy-button').onclick = async () => {
+    await fetchUrl('/cart/add', 'POST', { productId: product.id })
+  }
+
   productInfoContainer.appendChild(productElement)
 }
 

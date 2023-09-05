@@ -16,8 +16,9 @@ class CartService {
       }
 
       const cart = await Cart.findOne({ user: decodedToken.id }).populate(
-        'products'
+        'products.product'
       )
+
       if (!cart) {
         respondJson(res, 404, { error: 'Cart not found' })
         return
@@ -55,7 +56,21 @@ class CartService {
         respondJson(res, 404, { error: 'Product not found' })
         return
       }
-      cart.products = cart.products.concat(product)
+      //if product already in cart, increase quantity
+      const productInCart = cart.products.find((productInCart) =>
+        productInCart.product._id.equals(productData.productId)
+      )
+      if (productInCart) {
+        productInCart.quantity += 1
+        await cart.save()
+        respondJson(res, 200, cart)
+        return
+      }
+      //else add product to cart
+      cart.products = cart.products.concat({
+        product: product._id,
+        quantity: 1,
+      })
 
       await cart.save()
       respondJson(res, 200, cart)
@@ -68,6 +83,7 @@ class CartService {
   async removeFromCart(req, res) {
     const authHeader = req.headers.authorization
     const token = authHeader.substring(7)
+    const productData = await getRequestBodyJson(req)
     try {
       const decodedToken = jwt.verify(token, config.SECRET)
       if (!decodedToken.id) {
@@ -75,18 +91,35 @@ class CartService {
         return
       }
       const cart = await Cart.findOne({ user: decodedToken.id })
+
       if (!cart) {
         respondJson(res, 404, { error: 'Cart not found' })
         return
       }
-      const product = await Product.findById(req.body.productId)
+      const product = await Product.findById(productData.productId)
+
       if (!product) {
         respondJson(res, 404, { error: 'Product not found' })
         return
       }
-      cart.products = cart.products.filter(
-        (product) => product.id !== req.body.productId
+      //if product already in cart, decrease quantity
+      const productInCart = cart.products.find((productInCart) =>
+        productInCart.product._id.equals(productData.productId)
       )
+
+      if (productInCart) {
+        if (productInCart.quantity > 1) {
+          productInCart.quantity -= 1
+          await cart.save()
+          respondJson(res, 200, cart)
+          return
+        }
+      }
+      //else remove product from cart
+      cart.products = cart.products.filter(
+        (product) => !product.product._id.equals(productData.productId)
+      )
+
       await cart.save()
       respondJson(res, 200, cart)
     } catch (error) {
