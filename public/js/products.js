@@ -48,6 +48,7 @@ async function displayProducts() {
 
   productHeader.style.display = 'flex'
   productInfoContainer.innerHTML = ''
+  productListContainer.innerHTML = ''
 
   if (isAdmin) {
     document.getElementById('new-product-container').innerHTML = ''
@@ -55,7 +56,7 @@ async function displayProducts() {
   }
 
   products.forEach(async (product) => {
-    const productElement = await createProductElement(product)
+    const productElement = createProductElement(product, isAdmin)
     const editContainer = createEditContainer(product)
 
     if (isAdmin) {
@@ -94,7 +95,7 @@ function createNewProductDiv() {
   document.getElementById('new-product-container').appendChild(newProductDiv)
 }
 
-async function createProductElement(product) {
+function createProductElement(product, isAdmin) {
   const productTemplate = document.getElementById('product-template')
   const productElement = document.importNode(productTemplate.content, true)
   const productName = productElement.querySelector('.product-name')
@@ -103,7 +104,7 @@ async function createProductElement(product) {
     '.product-description'
   )
   const editDiv = productElement.querySelector('.product-edit')
-  if (!(await isUserAdmin())) {
+  if (!isAdmin) {
     const buyButton = document.createElement('button')
     buyButton.textContent = 'shopping_cart'
     buyButton.classList.add('buy-button-small')
@@ -114,7 +115,7 @@ async function createProductElement(product) {
   productName.textContent = product.name
   productPrice.textContent = `${product.price} €`
   productDescription.textContent = product.description
-  productElement.querySelector('.product').onclick = () => {
+  productName.onclick = () => {
     window.history.pushState(product.id, '', `/products/${product.id}`)
     displaySingleProduct()
   }

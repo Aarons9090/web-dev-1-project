@@ -82,6 +82,7 @@ a.current {
   justify-content: space-between;
   background-color: white;
   padding: 20px;
+  margin-top: 10px;
 }
 
 .product-header>* {
@@ -107,6 +108,12 @@ a.current {
   width: 200px;
 }
 
+.product-name {
+  font-weight: bold;
+  font-size: 18px;
+
+}
+
 .product-actions {
   display: flex;
   justify-content: space-between;
@@ -115,10 +122,12 @@ a.current {
 
 .buy-button-small {
   color: var(--primary-orange);
-  border: none;
+  border: 1px solid var(--primary-orange);
   background-color: transparent;
   cursor: pointer;
   font-size: 30px;
+  height: 50px;
+  width: 50px;
 }
 
 .buy-button {
