@@ -32,7 +32,6 @@ class ProductService {
   }
 
   async createProduct(req, res) {
-    res.setHeader('Content-Type', 'application/json')
     try {
       const productData = await getRequestBodyJson(req)
 

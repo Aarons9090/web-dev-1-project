@@ -3,7 +3,11 @@ const User = require('../models/user')
 const Role = require('../models/role')
 const config = require('../utils/config')
 const jwt = require('jsonwebtoken')
-const { getRequestBodyJson, respondJson } = require('../utils/helpers')
+const {
+  getRequestBodyJson,
+  respondJson,
+  getVerifiedToken,
+} = require('../utils/helpers')
 const { WebTokenExpirationSeconds } = require('../utils/constants')
 
 class AuthService {
@@ -105,41 +109,11 @@ class AuthService {
     }
   }
 
-  async isUserLoggedIn(req, res) {
-    const authHeader = req.headers.authorization
-
-    if (!authHeader || !authHeader.toLowerCase().startsWith('bearer ')) {
-      respondJson(res, 401, { error: 'Token missing or invalid' })
-      return
-    }
-    const token = authHeader.substring(7)
-    try {
-      const decodedToken = jwt.verify(token, config.SECRET)
-      if (!decodedToken.id) {
-        respondJson(res, 401, { error: 'Token missing or invalid' })
-        return
-      }
-    } catch (error) {
-      respondJson(res, 401, { error: 'Token missing or invalid' })
-      return
-    }
-  }
   //TODO: yhteiset errorit
   async getUserRole(req, res) {
-    const authHeader = req.headers.authorization
-
-    if (!authHeader || !authHeader.toLowerCase().startsWith('bearer ')) {
-      respondJson(res, 401, { error: 'Token missing or invalid' })
-      return
-    }
-    const token = authHeader.substring(7)
     try {
-      const decodedToken = jwt.verify(token, config.SECRET)
+      const decodedToken = getVerifiedToken(req)
 
-      if (!decodedToken.id) {
-        respondJson(res, 401, { error: 'Token missing or invalid' })
-        return
-      }
       const user = await User.findById(decodedToken.id).populate('role')
       if (!user) {
         respondJson(res, 401, { error: 'Token missing or invalid' })

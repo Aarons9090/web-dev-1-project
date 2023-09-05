@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const config = require('./config')
+const jwt = require('jsonwebtoken')
+
 async function getRequestBodyJson(req) {
   return new Promise((resolve, reject) => {
     let requestBody = ''
@@ -33,6 +35,23 @@ function respondJson(res, statusCode, data) {
   res.end(JSON.stringify(data))
 }
 
+function getVerifiedToken(req, res) {
+  const authHeader = req.headers.authorization
+  if (!authHeader || !authHeader.toLowerCase().startsWith('bearer ')) {
+    respondJson(res, 401, { error: 'Token missing or invalid' })
+  }
+  const token = authHeader.substring(7)
+  try {
+    const decodedToken = jwt.verify(token, config.SECRET)
+    if (!decodedToken.id) {
+      respondJson(res, 401, { error: 'Token missing or invalid' })
+    }
+    return decodedToken
+  } catch (error) {
+    respondJson(res, 401, { error: 'Token missing or invalid' })
+  }
+}
+
 function loadDb() {
   mongoose
     .connect(config.MONGOURL, {
@@ -56,4 +75,5 @@ module.exports = {
   getIdFromUrl,
   respondJson,
   loadDb,
+  getVerifiedToken,
 }

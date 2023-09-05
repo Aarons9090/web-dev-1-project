@@ -39,7 +39,6 @@ class UserService {
 
   // not used
   async createUser(req, res) {
-    res.setHeader('Content-Type', 'application/json')
     try {
       const userData = await getRequestBodyJson(req)
 

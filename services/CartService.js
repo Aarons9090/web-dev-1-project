@@ -1,19 +1,17 @@
 const Cart = require('../models/cart')
 const Product = require('../models/Product')
 const config = require('../utils/config')
-const { getRequestBodyJson, respondJson } = require('../utils/helpers')
+const {
+  getRequestBodyJson,
+  respondJson,
+  getVerifiedToken,
+} = require('../utils/helpers')
 const jwt = require('jsonwebtoken')
 
 class CartService {
   async getCart(req, res) {
-    const authHeader = req.headers.authorization
-    const token = authHeader.substring(7)
     try {
-      const decodedToken = jwt.verify(token, config.SECRET)
-      if (!decodedToken.id) {
-        respondJson(res, 401, { error: 'Token missing or invalid' })
-        return
-      }
+      const decodedToken = getVerifiedToken(req)
 
       let cart = await Cart.findOne({ user: decodedToken.id }).populate(
         'products.product'
@@ -35,15 +33,10 @@ class CartService {
   }
 
   async addToCart(req, res) {
-    const authHeader = req.headers.authorization
-    const token = authHeader.substring(7)
     const productData = await getRequestBodyJson(req)
     try {
-      const decodedToken = jwt.verify(token, config.SECRET)
-      if (!decodedToken.id) {
-        respondJson(res, 401, { error: 'Token missing or invalid' })
-        return
-      }
+      const decodedToken = getVerifiedToken(req)
+
       let cart = await Cart.findOne({ user: decodedToken.id })
 
       //if no cart, create cart
@@ -88,15 +81,10 @@ class CartService {
    * Used to decrease quantity of product in cart or remove product from cart if quantity = 1
    */
   async removeFromCart(req, res) {
-    const authHeader = req.headers.authorization
-    const token = authHeader.substring(7)
     const productData = await getRequestBodyJson(req)
     try {
-      const decodedToken = jwt.verify(token, config.SECRET)
-      if (!decodedToken.id) {
-        respondJson(res, 401, { error: 'Token missing or invalid' })
-        return
-      }
+      const decodedToken = getVerifiedToken(req)
+
       const cart = await Cart.findOne({ user: decodedToken.id })
 
       if (!cart) {
@@ -136,15 +124,10 @@ class CartService {
   }
 
   async deleteFromCart(req, res) {
-    const authHeader = req.headers.authorization
-    const token = authHeader.substring(7)
     const productData = await getRequestBodyJson(req)
     try {
-      const decodedToken = jwt.verify(token, config.SECRET)
-      if (!decodedToken.id) {
-        respondJson(res, 401, { error: 'Token missing or invalid' })
-        return
-      }
+      const decodedToken = getVerifiedToken(req)
+
       const cart = await Cart.findOne({ user: decodedToken.id })
 
       if (!cart) {
@@ -165,14 +148,8 @@ class CartService {
   }
 
   async emptyCart(req, res) {
-    const authHeader = req.headers.authorization
-    const token = authHeader.substring(7)
     try {
-      const decodedToken = jwt.verify(token, config.SECRET)
-      if (!decodedToken.id) {
-        respondJson(res, 401, { error: 'Token missing or invalid' })
-        return
-      }
+      const decodedToken = getVerifiedToken(req)
       const cart = await Cart.findOne({ user: decodedToken.id })
       if (!cart) {
         respondJson(res, 404, { error: 'Cart not found' })

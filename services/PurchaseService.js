@@ -1,9 +1,6 @@
-const Product = require('../models/Product')
 const Cart = require('../models/cart')
 const Purchase = require('../models/purchase')
-const config = require('../utils/config')
-const { getRequestBodyJson, respondJson } = require('../utils/helpers')
-const jwt = require('jsonwebtoken')
+const { respondJson, getVerifiedToken } = require('../utils/helpers')
 
 class PurchaseService {
   async getAllPurchases(req, res) {
@@ -18,14 +15,8 @@ class PurchaseService {
   }
 
   async getUserPurchases(req, res) {
-    const authHeader = req.headers.authorization
-    const token = authHeader.substring(7)
     try {
-      const decodedToken = jwt.verify(token, config.SECRET)
-      if (!decodedToken.id) {
-        respondJson(res, 401, { error: 'Token missing or invalid' })
-        return
-      }
+      const decodedToken = getVerifiedToken(req)
 
       const purchases = await Purchase.find({ user: decodedToken.id }).populate(
         'products.product'
@@ -43,14 +34,8 @@ class PurchaseService {
   }
 
   async checkout(req, res) {
-    const authHeader = req.headers.authorization
-    const token = authHeader.substring(7)
     try {
-      const decodedToken = jwt.verify(token, config.SECRET)
-      if (!decodedToken.id) {
-        respondJson(res, 401, { error: 'Token missing or invalid' })
-        return
-      }
+      const decodedToken = getVerifiedToken(req)
       const cart = await Cart.findOne({ user: decodedToken.id })
       const purchase = new Purchase({
         products: cart.products,

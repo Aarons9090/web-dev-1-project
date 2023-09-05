@@ -9,7 +9,7 @@ const {
   AuthWithIdPath,
 } = require('./utils/constants')
 const url = require('url')
-const { respondJson } = require('./utils/helpers')
+const { respondJson, getVerifiedToken } = require('./utils/helpers')
 const AuthService = require('./services/AuthService')
 const CartService = require('./services/CartService')
 const PurchaseService = require('./services/PurchaseService')
@@ -39,7 +39,8 @@ function handleRequest(req, res) {
       path !== '/api/login' &&
       path !== '/api/register'
     ) {
-      authService.isUserLoggedIn(req, res)
+      // verify user token
+      getVerifiedToken(req)
     }
 
     if (req.method === 'OPTIONS') {
