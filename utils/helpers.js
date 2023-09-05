@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const config = require('./config')
 const jwt = require('jsonwebtoken')
+const Role = require('../models/role')
 
 async function getRequestBodyJson(req) {
   return new Promise((resolve, reject) => {
@@ -39,6 +40,7 @@ function getVerifiedToken(req, res) {
   const authHeader = req.headers.authorization
   if (!authHeader || !authHeader.toLowerCase().startsWith('bearer ')) {
     respondJson(res, 401, { error: 'Token missing or invalid' })
+    return
   }
   const token = authHeader.substring(7)
   try {

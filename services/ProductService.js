@@ -42,8 +42,8 @@ class ProductService {
         description: description,
         price: price,
       })
-
       const savedProduct = await newProduct.save()
+
       respondJson(res, 201, savedProduct)
     } catch (error) {
       respondJson(res, 400, { error: error.message })

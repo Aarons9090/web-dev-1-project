@@ -16,7 +16,7 @@ class PurchaseService {
 
   async getUserPurchases(req, res) {
     try {
-      const decodedToken = getVerifiedToken(req)
+      const decodedToken = getVerifiedToken(req, res)
 
       const purchases = await Purchase.find({ user: decodedToken.id }).populate(
         'products.product'
@@ -35,7 +35,7 @@ class PurchaseService {
 
   async checkout(req, res) {
     try {
-      const decodedToken = getVerifiedToken(req)
+      const decodedToken = getVerifiedToken(req, res)
       const cart = await Cart.findOne({ user: decodedToken.id })
       const purchase = new Purchase({
         products: cart.products,

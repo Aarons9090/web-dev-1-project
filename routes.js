@@ -1,15 +1,25 @@
 const { requestLogger } = require('./utils/middleware')
-const UserService = require('./services/UserService')
-const ProductService = require('./services/ProductService')
 const {
   UserWithIdPath,
   UserPath,
   ProductPath,
   ProductWithIdPath,
-  AuthWithIdPath,
+  LoginPath,
+  RegisterPath,
+  RolePath,
+  CartPath,
+  PurchasesPath,
+  PurchasesPathUser,
+  CheckoutPath,
+  CartAddPath,
+  CartRemovePath,
+  CartDeletePath,
+  CartEmptyPath,
 } = require('./utils/constants')
 const url = require('url')
 const { respondJson, getVerifiedToken } = require('./utils/helpers')
+const UserService = require('./services/UserService')
+const ProductService = require('./services/ProductService')
 const AuthService = require('./services/AuthService')
 const CartService = require('./services/CartService')
 const PurchaseService = require('./services/PurchaseService')
@@ -23,6 +33,7 @@ const purchaseService = new PurchaseService()
 function handleRequest(req, res) {
   requestLogger(req, res, async () => {
     const { path } = url.parse(req.url, true)
+    const { method } = req
 
     res.setHeader('Content-Type', 'application/json')
 
@@ -33,73 +44,72 @@ function handleRequest(req, res) {
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE')
     res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:8080')
 
-    // check that user is logged in
-    if (
-      req.method !== 'OPTIONS' &&
-      path !== '/api/login' &&
-      path !== '/api/register'
-    ) {
-      // verify user token
-      getVerifiedToken(req)
-    }
-
-    if (req.method === 'OPTIONS') {
+    // Paths that don't require authentication
+    if (method === 'OPTIONS') {
       res.writeHead(200)
       res.end()
       return
     }
+
+    if (method === 'POST' && path === LoginPath) {
+      await authService.login(req, res)
+      return
+    } else if (method === 'POST' && path === RegisterPath) {
+      await authService.register(req, res)
+      return
+    }
+
+    // Paths that require authentication
+    const token = getVerifiedToken(req, res)
+
     // Users
-    else if (req.method === 'POST' && path === UserPath) {
+    if (method === 'POST' && path === UserPath) {
       await userService.createUser(req, res)
-    } else if (req.method === 'GET' && path === UserPath) {
+    } else if (method === 'GET' && path === UserPath) {
       await userService.getUsers(req, res)
-    } else if (req.method === 'GET' && path.match(UserWithIdPath)) {
+    } else if (method === 'GET' && path.match(UserWithIdPath)) {
       await userService.getUserById(req, res)
-    } else if (req.method === 'PUT' && path.match(UserWithIdPath)) {
+    } else if (method === 'PUT' && path.match(UserWithIdPath)) {
       await userService.updateUser(req, res)
-    } else if (req.method === 'DELETE' && path.match(UserWithIdPath)) {
+    } else if (method === 'DELETE' && path.match(UserWithIdPath)) {
       await userService.deleteUser(req, res)
     }
     // Products
-    else if (req.method === 'GET' && path === ProductPath) {
+    else if (method === 'GET' && path === ProductPath) {
       await productService.getProducts(req, res)
-    } else if (req.method === 'GET' && path.match(ProductWithIdPath)) {
+    } else if (method === 'GET' && path.match(ProductWithIdPath)) {
       await productService.getProductById(req, res)
-    } else if (req.method === 'POST' && path === ProductPath) {
+    } else if (method === 'POST' && path === ProductPath) {
       await productService.createProduct(req, res)
-    } else if (req.method === 'PUT' && path.match(ProductWithIdPath)) {
+    } else if (method === 'PUT' && path.match(ProductWithIdPath)) {
       await productService.updateProduct(req, res)
-    } else if (req.method === 'DELETE' && path.match(ProductWithIdPath)) {
+    } else if (method === 'DELETE' && path.match(ProductWithIdPath)) {
       await productService.deleteProduct(req, res)
     }
 
     //Auth
-    else if (req.method === 'POST' && path === '/api/login') {
-      await authService.login(req, res)
-    } else if (req.method === 'POST' && path === '/api/register') {
-      await authService.register(req, res)
-    } else if (req.method === 'GET' && path === '/api/role') {
+    else if (method === 'GET' && path === RolePath) {
       await authService.getUserRole(req, res)
     }
 
     //Cart
-    else if (req.method === 'GET' && path === '/api/cart') {
+    else if (method === 'GET' && path === CartPath) {
       await cartService.getCart(req, res)
-    } else if (req.method === 'POST' && path === '/api/cart/add') {
+    } else if (method === 'POST' && path === CartAddPath) {
       await cartService.addToCart(req, res)
-    } else if (req.method === 'POST' && path === '/api/cart/remove') {
+    } else if (method === 'POST' && path === CartRemovePath) {
       await cartService.removeFromCart(req, res)
-    } else if (req.method === 'POST' && path === '/api/cart/delete') {
+    } else if (method === 'POST' && path === CartDeletePath) {
       await cartService.deleteFromCart(req, res)
-    } else if (req.method === 'POST' && path === '/api/cart/empty') {
+    } else if (method === 'POST' && path === CartEmptyPath) {
       await cartService.emptyCart(req, res)
     }
-    // checkout
-    else if (req.method === 'POST' && path === '/api/cart/checkout') {
+    // Purchases
+    else if (method === 'POST' && path === CheckoutPath) {
       await purchaseService.checkout(req, res)
-    } else if (req.method === 'GET' && path === '/api/purchases') {
+    } else if (method === 'GET' && path === PurchasesPath) {
       await purchaseService.getAllPurchases(req, res)
-    } else if (req.method === 'GET' && path === '/api/purchases/user') {
+    } else if (method === 'GET' && path === PurchasesPathUser) {
       await purchaseService.getUserPurchases(req, res)
     } else {
       respondJson(res, 404, { error: 'Route not found' })

@@ -112,7 +112,7 @@ class AuthService {
   //TODO: yhteiset errorit
   async getUserRole(req, res) {
     try {
-      const decodedToken = getVerifiedToken(req)
+      const decodedToken = getVerifiedToken(req, res)
 
       const user = await User.findById(decodedToken.id).populate('role')
       if (!user) {

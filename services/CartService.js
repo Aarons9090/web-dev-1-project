@@ -11,7 +11,7 @@ const jwt = require('jsonwebtoken')
 class CartService {
   async getCart(req, res) {
     try {
-      const decodedToken = getVerifiedToken(req)
+      const decodedToken = getVerifiedToken(req, res)
 
       let cart = await Cart.findOne({ user: decodedToken.id }).populate(
         'products.product'
@@ -35,7 +35,7 @@ class CartService {
   async addToCart(req, res) {
     const productData = await getRequestBodyJson(req)
     try {
-      const decodedToken = getVerifiedToken(req)
+      const decodedToken = getVerifiedToken(req, res)
 
       let cart = await Cart.findOne({ user: decodedToken.id })
 
@@ -83,7 +83,7 @@ class CartService {
   async removeFromCart(req, res) {
     const productData = await getRequestBodyJson(req)
     try {
-      const decodedToken = getVerifiedToken(req)
+      const decodedToken = getVerifiedToken(req, res)
 
       const cart = await Cart.findOne({ user: decodedToken.id })
 
@@ -126,7 +126,7 @@ class CartService {
   async deleteFromCart(req, res) {
     const productData = await getRequestBodyJson(req)
     try {
-      const decodedToken = getVerifiedToken(req)
+      const decodedToken = getVerifiedToken(req, res)
 
       const cart = await Cart.findOne({ user: decodedToken.id })
 
@@ -149,7 +149,7 @@ class CartService {
 
   async emptyCart(req, res) {
     try {
-      const decodedToken = getVerifiedToken(req)
+      const decodedToken = getVerifiedToken(req, res)
       const cart = await Cart.findOne({ user: decodedToken.id })
       if (!cart) {
         respondJson(res, 404, { error: 'Cart not found' })
