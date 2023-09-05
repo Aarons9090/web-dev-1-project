@@ -31,6 +31,13 @@ async function displayOrders() {
 
   orderList.innerHTML = ''
 
+  if (orders.length === 0) {
+    const noOrders = document.createElement('h3')
+    noOrders.textContent = 'No orders'
+    orderList.appendChild(noOrders)
+    return
+  }
+
   orders.forEach((order) => {
     const orderTemplate = document.querySelector('.order-template')
     const orderElement = document.importNode(orderTemplate.content, true)
@@ -43,7 +50,14 @@ async function displayOrders() {
       orderElement.querySelector('.order-info').appendChild(userTitle)
     }
     order.products.forEach((productData) => {
-      const product = productData.product
+      let product = productData.product
+
+      if (!product) {
+        product = {
+          name: 'Removed product',
+          price: 0,
+        }
+      }
       const orderItemTemplate = document.querySelector('.order-item-template')
       const orderItemElement = document.importNode(
         orderItemTemplate.content,
@@ -52,6 +66,7 @@ async function displayOrders() {
 
       orderItemElement.querySelector('.order-item-name').textContent =
         product.name
+
       orderItemElement.querySelector(
         '.order-item-price'
       ).textContent = `${product.price} €`
@@ -66,7 +81,7 @@ async function displayOrders() {
       }
     })
     const total = order.products.reduce((total, item) => {
-      return total + item.product.price * item.quantity
+      return total + item.product ? item.product.price * item.quantity : 0
     }, 0)
     orderElement.querySelector('.total').textContent = `Total: ${total} €`
     orderList.appendChild(orderElement)

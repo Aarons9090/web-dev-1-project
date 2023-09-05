@@ -67,7 +67,7 @@ async function displayProducts() {
       const showEditContainerButton = createShowEditButton(editContainer)
 
       productElement
-        .querySelector('.product-edit')
+        .querySelector('.product-action')
         .appendChild(showEditContainerButton)
 
       productElement
@@ -107,7 +107,7 @@ function createProductElement(product, isAdmin) {
   const productDescription = productElement.querySelector(
     '.product-description'
   )
-  const editDiv = productElement.querySelector('.product-edit')
+  const editDiv = productElement.querySelector('.product-action')
   if (!isAdmin) {
     const buyButton = document.createElement('button')
     buyButton.textContent = 'shopping_cart'
@@ -137,6 +137,12 @@ function createEditContainer(product) {
   const editNameField = createInput('text', product.name)
   const editPriceField = createInput('text', product.price)
   const editDescriptionField = createInput('text', product.description)
+  const deleteButton = document.createElement('button')
+  deleteButton.textContent = 'Delete'
+  deleteButton.onclick = async () => {
+    await fetchUrl(`/products/${product.id}`, 'DELETE')
+    displayProducts()
+  }
 
   const editButton = createEditButton(
     product,
@@ -149,6 +155,7 @@ function createEditContainer(product) {
   editContainer.appendChild(editPriceField)
   editContainer.appendChild(editDescriptionField)
   editContainer.appendChild(editButton)
+  editContainer.appendChild(deleteButton)
 
   return editContainer
 }

@@ -2,6 +2,8 @@ const { loadDb, disconnectDb } = require('./utils/helpers')
 const Product = require('./models/Product')
 const Role = require('./models/role')
 const User = require('./models/user')
+const Purchase = require('./models/purchase')
+const Cart = require('./models/cart')
 const { default: mongoose } = require('mongoose')
 const bcrypt = require('bcrypt')
 const config = require('./utils/config')
@@ -50,6 +52,8 @@ async function loadData() {
     // Delete all products and users
     await Product.deleteMany({})
     await User.deleteMany({})
+    await Cart.deleteMany({})
+    await Purchase.deleteMany({})
 
     // Create new data
     const productPromises = mockProducts.map(async (product) => {
