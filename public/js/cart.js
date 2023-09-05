@@ -23,6 +23,11 @@ async function displayCart() {
     '.cart-total'
   ).textContent = `Total: ${cartTotal} €`
 
+  cartContainer.querySelector('.clear-cart').onclick = async () => {
+    await fetchUrl('/cart/empty', 'POST')
+    await displayCart()
+  }
+
   cartItems.forEach((productData) => {
     const product = productData.product
     const productTemplate = document.querySelector('.cart-item-template')

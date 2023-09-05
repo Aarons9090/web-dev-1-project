@@ -2,12 +2,34 @@
   padding: 10px;
 }
 
+.clear-cart {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 5px;
+  border-radius: 5px;
+  margin: 10px;
+}
+
+.checkout {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 5px;
+  border-radius: 5px;
+  margin: 10px;
+}
+
 .cart-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 10px;
   padding: 10px;
+}
+
+.cart-item>p {
+  width: 150px;
 }
 
 .remove-from-cart {
@@ -20,9 +42,9 @@
 
 .quantity-container {
   display: flex;
-  width: 150px;
   justify-content: space-between;
   align-items: center;
+  width: 100px;
 }
 
 .quantity-container>button {
@@ -33,4 +55,6 @@
   border-radius: 5px;
   width: 30px;
   height: 30px;
+  font-size: larger;
+  font-weight: bold;
 }
