@@ -3,13 +3,15 @@
 }
 
 .order-info {
-  margin: 10px;
-  padding: 10px;
-  background-color: rgb(202, 202, 202)
+  margin-top: 5px;
+  background-color: white;
+  padding: 20px;
 }
 
 .order {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 10px;
+  margin: 10px;
 }

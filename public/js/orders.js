@@ -36,6 +36,11 @@ async function displayOrders() {
         productData.quantity
 
       orderElement.querySelector('.order-info').appendChild(orderItemElement)
+      //if not last order item element, add a separator
+      if (order.products.indexOf(productData) !== order.products.length - 1) {
+        const separator = document.createElement('hr')
+        orderElement.querySelector('.order-info').appendChild(separator)
+      }
     })
     const total = order.products.reduce((total, item) => {
       return total + item.product.price * item.quantity
