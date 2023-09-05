@@ -1,32 +1,5 @@
+/* eslint-disable no-unused-vars */
 const baseUrl = 'http://127.0.0.1:3000/api'
-
-async function login() {
-  const usernameInput = document.getElementById('username')
-  const passwordInput = document.getElementById('password')
-  try {
-    const response = await fetchUrl(
-      '/login',
-      'POST',
-      {
-        username: usernameInput.value,
-        password: passwordInput.value,
-      },
-      false
-    )
-
-    const user = await response.json()
-
-    if (user.error) {
-      console.log(user.error)
-      return
-    }
-
-    localStorage.setItem('user', JSON.stringify(user))
-    window.location.href = '/'
-  } catch (error) {
-    console.log(error)
-  }
-}
 
 async function fetchUrl(url, method, body = null, isAuthenticated = true) {
   try {

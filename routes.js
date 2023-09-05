@@ -60,7 +60,8 @@ function handleRequest(req, res) {
     }
 
     // Paths that require authentication
-    const token = getVerifiedToken(req, res)
+    // verify user token
+    getVerifiedToken(req, res)
 
     // Users
     if (method === 'POST' && path === UserPath) {

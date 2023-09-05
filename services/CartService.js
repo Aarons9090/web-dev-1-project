@@ -1,12 +1,10 @@
 const Cart = require('../models/cart')
 const Product = require('../models/Product')
-const config = require('../utils/config')
 const {
   getRequestBodyJson,
   respondJson,
   getVerifiedToken,
 } = require('../utils/helpers')
-const jwt = require('jsonwebtoken')
 
 class CartService {
   async getCart(req, res) {

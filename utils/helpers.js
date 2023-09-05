@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const config = require('./config')
 const jwt = require('jsonwebtoken')
-const Role = require('../models/role')
 
 async function getRequestBodyJson(req) {
   return new Promise((resolve, reject) => {
