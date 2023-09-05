@@ -10,15 +10,38 @@ async function fetchOrders() {
   }
 }
 
+async function fetchAllOrders() {
+  try {
+    const response = await fetchUrl('/purchases', 'GET')
+    const orders = await response.json()
+    return orders
+  } catch (error) {
+    return []
+  }
+}
+
 async function displayOrders() {
-  const orders = await fetchOrders()
+  const isAdmin = await isUserAdmin()
+  let orders = []
+  if (isAdmin) {
+    orders = await fetchAllOrders()
+  } else {
+    orders = await fetchOrders()
+  }
 
   orderList.innerHTML = ''
 
   orders.forEach((order) => {
     const orderTemplate = document.querySelector('.order-template')
     const orderElement = document.importNode(orderTemplate.content, true)
-
+    if (isAdmin) {
+      const userTitle = document.createElement('h4')
+      userTitle.textContent = `
+      User ID: ${order.user.id}
+      Username: ${order.user.username}
+      `
+      orderElement.querySelector('.order-info').appendChild(userTitle)
+    }
     order.products.forEach((productData) => {
       const product = productData.product
       const orderItemTemplate = document.querySelector('.order-item-template')

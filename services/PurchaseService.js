@@ -9,6 +9,8 @@ class PurchaseService {
   async getAllPurchases(req, res) {
     try {
       const purchases = await Purchase.find({})
+        .populate('products.product')
+        .populate('user', { username: 1 })
       respondJson(res, 200, purchases)
     } catch (error) {
       respondJson(res, 400, { error: error.message })

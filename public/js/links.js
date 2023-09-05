@@ -11,15 +11,21 @@ async function populateLinks(roleName) {
   productsLink.href = '/products'
   productsLink.textContent = 'Products'
 
+  const ordersLink = document.createElement('a')
+  ordersLink.href = '/orders'
+
   // add current class tag if on current page
   if (currentPath === '/') {
     homeLink.classList.add('current')
   } else if (currentPath === '/products') {
     productsLink.classList.add('current')
+  } else if (currentPath === '/orders') {
+    ordersLink.classList.add('current')
   }
 
   linksContainer.appendChild(homeLink)
   linksContainer.appendChild(productsLink)
+  linksContainer.appendChild(ordersLink)
 
   if (isAdmin) {
     const usersLink = document.createElement('a')
@@ -29,6 +35,7 @@ async function populateLinks(roleName) {
       usersLink.classList.add('current')
     }
     linksContainer.appendChild(usersLink)
+    ordersLink.textContent = 'Orders'
   } else {
     const cartLink = document.createElement('a')
     cartLink.href = '/cart'
@@ -37,14 +44,7 @@ async function populateLinks(roleName) {
       cartLink.classList.add('current')
     }
     linksContainer.appendChild(cartLink)
-
-    const myOrdersLink = document.createElement('a')
-    myOrdersLink.href = '/orders'
-    myOrdersLink.textContent = 'My Orders'
-    if (currentPath === '/orders') {
-      myOrdersLink.classList.add('current')
-    }
-    linksContainer.appendChild(myOrdersLink)
+    ordersLink.textContent = 'My Orders'
   }
 }
 
