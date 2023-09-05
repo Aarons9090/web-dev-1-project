@@ -15,13 +15,17 @@ class CartService {
         return
       }
 
-      const cart = await Cart.findOne({ user: decodedToken.id }).populate(
+      let cart = await Cart.findOne({ user: decodedToken.id }).populate(
         'products.product'
       )
 
+      //if no cart, create cart
       if (!cart) {
-        respondJson(res, 404, { error: 'Cart not found' })
-        return
+        cart = new Cart({
+          products: [],
+          user: decodedToken.id,
+        })
+        await cart.save()
       }
       respondJson(res, 200, cart)
     } catch (error) {

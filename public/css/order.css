@@ -1,0 +1,15 @@
+.order-container {
+  padding: 10px;
+}
+
+.order-info {
+  margin: 10px;
+  padding: 10px;
+  background-color: rgb(202, 202, 202)
+}
+
+.order {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -37,6 +37,14 @@ async function populateLinks(roleName) {
       cartLink.classList.add('current')
     }
     linksContainer.appendChild(cartLink)
+
+    const myOrdersLink = document.createElement('a')
+    myOrdersLink.href = '/orders'
+    myOrdersLink.textContent = 'My Orders'
+    if (currentPath === '/orders') {
+      myOrdersLink.classList.add('current')
+    }
+    linksContainer.appendChild(myOrdersLink)
   }
 }
 

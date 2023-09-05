@@ -23,8 +23,15 @@ async function displayCart() {
     '.cart-total'
   ).textContent = `Total: ${cartTotal} €`
 
+  // clear cart
   cartContainer.querySelector('.clear-cart').onclick = async () => {
     await fetchUrl('/cart/empty', 'POST')
+    await displayCart()
+  }
+
+  // checkout cart
+  cartContainer.querySelector('.checkout').onclick = async () => {
+    await fetchUrl('/cart/checkout', 'POST')
     await displayCart()
   }
 
