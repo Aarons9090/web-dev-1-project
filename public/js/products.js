@@ -109,6 +109,9 @@ function createProductElement(product, isAdmin) {
     buyButton.textContent = 'shopping_cart'
     buyButton.classList.add('buy-button-small')
     buyButton.classList.add('material-icons')
+    buyButton.onclick = async () => {
+      await fetchUrl('/cart/add', 'POST', { productId: product.id })
+    }
     editDiv.appendChild(buyButton)
   }
 

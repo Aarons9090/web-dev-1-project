@@ -11,10 +11,12 @@ const {
 const url = require('url')
 const { respondJson } = require('./utils/helpers')
 const AuthService = require('./services/AuthService')
+const CartService = require('./services/CartService')
 
 const userService = new UserService()
 const productService = new ProductService()
 const authService = new AuthService()
+const cartService = new CartService()
 
 function handleRequest(req, res) {
   requestLogger(req, res, async () => {
@@ -75,6 +77,17 @@ function handleRequest(req, res) {
       await authService.register(req, res)
     } else if (req.method === 'GET' && path === '/api/role') {
       await authService.getUserRole(req, res)
+    }
+
+    //Cart
+    else if (req.method === 'GET' && path === '/api/cart') {
+      await cartService.getCart(req, res)
+    } else if (req.method === 'POST' && path === '/api/cart/add') {
+      await cartService.addToCart(req, res)
+    } else if (req.method === 'POST' && path === '/api/cart/remove') {
+      await cartService.removeFromCart(req, res)
+    } else if (req.method === 'POST' && path === '/api/cart/empty') {
+      await cartService.emptyCart(req, res)
     } else {
       respondJson(res, 404, { error: 'Route not found' })
     }
