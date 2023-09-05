@@ -34,8 +34,17 @@ async function displayCart() {
     ).textContent = `${product.price} €`
     productElement.querySelector('.cart-item-quantity').textContent =
       productData.quantity
-    productElement.querySelector('.remove-from-cart').onclick = async () => {
+    productElement.querySelector('.decrease-quantity').onclick = async () => {
       await fetchUrl('/cart/remove', 'POST', { productId: product.id })
+      await displayCart()
+    }
+    productElement.querySelector('.increase-quantity').onclick = async () => {
+      await fetchUrl('/cart/add', 'POST', { productId: product.id })
+      await displayCart()
+    }
+
+    productElement.querySelector('.remove-from-cart').onclick = async () => {
+      await fetchUrl('/cart/delete', 'POST', { productId: product.id })
       await displayCart()
     }
     cartItemList.appendChild(productElement)

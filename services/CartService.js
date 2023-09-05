@@ -80,6 +80,9 @@ class CartService {
     }
   }
 
+  /**
+   * Used to decrease quantity of product in cart or remove product from cart if quantity = 1
+   */
   async removeFromCart(req, res) {
     const authHeader = req.headers.authorization
     const token = authHeader.substring(7)
@@ -116,6 +119,35 @@ class CartService {
         }
       }
       //else remove product from cart
+      cart.products = cart.products.filter(
+        (product) => !product.product._id.equals(productData.productId)
+      )
+
+      await cart.save()
+      respondJson(res, 200, cart)
+    } catch (error) {
+      respondJson(res, 401, { error: 'Token missing or invalid' })
+      return
+    }
+  }
+
+  async deleteFromCart(req, res) {
+    const authHeader = req.headers.authorization
+    const token = authHeader.substring(7)
+    const productData = await getRequestBodyJson(req)
+    try {
+      const decodedToken = jwt.verify(token, config.SECRET)
+      if (!decodedToken.id) {
+        respondJson(res, 401, { error: 'Token missing or invalid' })
+        return
+      }
+      const cart = await Cart.findOne({ user: decodedToken.id })
+
+      if (!cart) {
+        respondJson(res, 404, { error: 'Cart not found' })
+        return
+      }
+
       cart.products = cart.products.filter(
         (product) => !product.product._id.equals(productData.productId)
       )

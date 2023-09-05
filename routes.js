@@ -86,6 +86,8 @@ function handleRequest(req, res) {
       await cartService.addToCart(req, res)
     } else if (req.method === 'POST' && path === '/api/cart/remove') {
       await cartService.removeFromCart(req, res)
+    } else if (req.method === 'POST' && path === '/api/cart/delete') {
+      await cartService.deleteFromCart(req, res)
     } else if (req.method === 'POST' && path === '/api/cart/empty') {
       await cartService.emptyCart(req, res)
     } else {

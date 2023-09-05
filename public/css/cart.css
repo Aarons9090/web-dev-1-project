@@ -17,3 +17,20 @@
   padding: 5px;
   border-radius: 5px;
 }
+
+.quantity-container {
+  display: flex;
+  width: 150px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.quantity-container>button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 5px;
+  border-radius: 5px;
+  width: 30px;
+  height: 30px;
+}
