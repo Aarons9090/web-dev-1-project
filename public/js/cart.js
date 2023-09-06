@@ -36,6 +36,7 @@ async function displayCart() {
       return
     }
     showNotification('Cart cleared!', 'success')
+    populateLinks()
     await displayCart()
   }
 
@@ -52,6 +53,7 @@ async function displayCart() {
       return
     }
     showNotification('Order completed!', 'success')
+    populateLinks()
     await displayCart()
   }
 
@@ -69,10 +71,12 @@ async function displayCart() {
       productData.quantity
     productElement.querySelector('.decrease-quantity').onclick = async () => {
       await fetchUrl('/cart/remove', 'POST', { productId: product.id })
+      populateLinks()
       await displayCart()
     }
     productElement.querySelector('.increase-quantity').onclick = async () => {
       await fetchUrl('/cart/add', 'POST', { productId: product.id })
+      populateLinks()
       await displayCart()
     }
 
@@ -84,7 +88,7 @@ async function displayCart() {
         showNotification('Error removing from cart', 'error')
         return
       }
-
+      populateLinks()
       await displayCart()
     }
     cartItemList.appendChild(productElement)

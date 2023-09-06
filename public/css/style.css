@@ -59,6 +59,24 @@ a.current {
   justify-content: space-between;
 }
 
+.cart-link {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.cart-quantity {
+  display: block;
+  background-color: var(--primary-orange);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  font-size: 14px;
+  margin-left: 5px;
+}
+
 .user {
   margin-top: 20px;
   background-color: white;
@@ -115,7 +133,7 @@ a.current {
 .product-name {
   font-weight: bold;
   font-size: 18px;
-
+  cursor: pointer;
 }
 
 .product-actions {

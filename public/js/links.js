@@ -1,6 +1,21 @@
 const linksContainer = document.getElementById('links-container')
+async function getCartQuantity() {
+  const response = await fetchUrl('/cart', 'GET')
+  if (!response) {
+    return 0
+  }
+  const cart = await response.json()
+  if (cart.error) {
+    return 0
+  }
+  return cart.products.reduce((total, item) => {
+    if (!item.product) return total
+    return total + item.quantity
+  }, 0)
+}
 
 async function populateLinks(roleName) {
+  linksContainer.innerHTML = ''
   const isAdmin = roleName === 'Admin'
   const currentPath = window.location.pathname
   const homeLink = document.createElement('a')
@@ -36,13 +51,22 @@ async function populateLinks(roleName) {
     linksContainer.appendChild(usersLink)
     ordersLink.textContent = 'Orders'
   } else {
+    const cartLinkDiv = document.createElement('div')
+    cartLinkDiv.classList.add('cart-link')
+    const cartQuantity = document.createElement('span')
+    cartQuantity.classList.add('cart-quantity')
+    cartQuantity.textContent = await getCartQuantity()
     const cartLink = document.createElement('a')
-    cartLink.href = '/cart'
+    cartLinkDiv.onclick = () => {
+      window.location.href = '/cart'
+    }
     cartLink.textContent = 'Cart'
     if (currentPath === '/cart') {
       cartLink.classList.add('current')
     }
-    linksContainer.appendChild(cartLink)
+    cartLinkDiv.appendChild(cartLink)
+    cartLinkDiv.appendChild(cartQuantity)
+    linksContainer.appendChild(cartLinkDiv)
     ordersLink.textContent = 'My Orders'
   }
 

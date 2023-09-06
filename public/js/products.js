@@ -50,6 +50,7 @@ async function displaySingleProduct() {
       return
     }
     showNotification('Added to cart!', 'success')
+    populateLinks()
   }
 
   productInfoContainer.appendChild(productElement)
@@ -135,6 +136,7 @@ function createProductElement(product, isAdmin) {
         return
       }
       showNotification('Added to cart!', 'success')
+      populateLinks()
     }
     editDiv.appendChild(buyButton)
   }
