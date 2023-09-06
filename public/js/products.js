@@ -4,8 +4,12 @@ const productHeader = document.getElementById('product-header')
 
 async function fetchProducts() {
   try {
-    const response = await fetchUrl('/products', 'GET')
-    const products = await response.json()
+    const res = await fetchUrl('/products', 'GET')
+    if (!res) {
+      showNotification('Error fetching products', 'error')
+      return []
+    }
+    const products = await res.json()
     return products
   } catch (error) {
     return []
@@ -40,7 +44,12 @@ async function displaySingleProduct() {
     product.description
 
   productElement.querySelector('.buy-button').onclick = async () => {
-    await fetchUrl('/cart/add', 'POST', { productId: product.id })
+    const res = await fetchUrl('/cart/add', 'POST', { productId: product.id })
+    if (!res) {
+      showNotification('Error adding to cart', 'error')
+      return
+    }
+    showNotification('Added to cart!', 'success')
   }
 
   productInfoContainer.appendChild(productElement)
@@ -88,11 +97,17 @@ function createNewProductDiv() {
   const newProductDescriptionField = newProductDiv.getElementById('description')
 
   newProductButton.onclick = async () => {
-    await fetchUrl('/products', 'POST', {
+    const res = await fetchUrl('/products', 'POST', {
       name: newProductNameField.value,
       price: newProductPriceField.value,
       description: newProductDescriptionField.value,
     })
+
+    if (!res) {
+      showNotification('Error creating product', 'error')
+      return
+    }
+    showNotification('Product created', 'success')
     displayProducts()
   }
 
@@ -114,7 +129,12 @@ function createProductElement(product, isAdmin) {
     buyButton.classList.add('buy-button-small')
     buyButton.classList.add('material-icons')
     buyButton.onclick = async () => {
-      await fetchUrl('/cart/add', 'POST', { productId: product.id })
+      const res = await fetchUrl('/cart/add', 'POST', { productId: product.id })
+      if (!res) {
+        showNotification('Error adding to cart', 'error')
+        return
+      }
+      showNotification('Added to cart!', 'success')
     }
     editDiv.appendChild(buyButton)
   }
@@ -140,7 +160,12 @@ function createEditContainer(product) {
   const deleteButton = document.createElement('button')
   deleteButton.textContent = 'Delete'
   deleteButton.onclick = async () => {
-    await fetchUrl(`/products/${product.id}`, 'DELETE')
+    const res = await fetchUrl(`/products/${product.id}`, 'DELETE')
+    if (!res) {
+      showNotification('Error deleting product', 'error')
+      return
+    }
+    showNotification('Product deleted', 'success')
     displayProducts()
   }
 
@@ -172,11 +197,16 @@ function createEditButton(product, nameField, priceField, descriptionField) {
   editButton.textContent = 'Save'
 
   editButton.onclick = async () => {
-    await fetchUrl(`/products/${product.id}`, 'PUT', {
+    const res = await fetchUrl(`/products/${product.id}`, 'PUT', {
       name: nameField.value,
       price: priceField.value,
       description: descriptionField.value,
     })
+    if (!res) {
+      showNotification('Error updating product', 'error')
+      return
+    }
+    showNotification('Product updated', 'success')
     displayProducts()
   }
 

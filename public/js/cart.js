@@ -2,8 +2,12 @@ const cartContainer = document.querySelector('.cart-container')
 const cartItemList = document.querySelector('.cart-items')
 async function fetchCart() {
   try {
-    const response = await fetchUrl('/cart', 'GET')
-    const cart = await response.json()
+    const res = await fetchUrl('/cart', 'GET')
+    if (!res) {
+      showNotification('Error fetching cart', 'error')
+      return []
+    }
+    const cart = await res.json()
     return cart
   } catch (error) {
     return []
@@ -14,6 +18,7 @@ async function displayCart() {
   const cart = await fetchCart()
   const cartItems = cart.error ? [] : cart.products
   const cartTotal = cartItems.reduce((total, item) => {
+    if (!item.product) return total
     return total + item.product.price * item.quantity
   }, 0)
 
@@ -25,17 +30,29 @@ async function displayCart() {
 
   // clear cart
   cartContainer.querySelector('.clear-cart').onclick = async () => {
-    await fetchUrl('/cart/empty', 'POST')
+    const res = await fetchUrl('/cart/empty', 'POST')
+    if (!res) {
+      showNotification('Error clearing cart', 'error')
+      return
+    }
+    showNotification('Cart cleared!', 'success')
     await displayCart()
   }
 
   // checkout cart
   cartContainer.querySelector('.checkout').onclick = async () => {
-    await fetchUrl('/cart/checkout', 'POST')
+    const res = await fetchUrl('/cart/checkout', 'POST')
+
+    if (!res) {
+      showNotification('Error checking out', 'error')
+      return
+    }
+    showNotification('Order completed!', 'success')
     await displayCart()
   }
 
   cartItems.forEach((productData) => {
+    if (!productData.product) return
     const product = productData.product
     const productTemplate = document.querySelector('.cart-item-template')
     const productElement = document.importNode(productTemplate.content, true)
@@ -56,7 +73,14 @@ async function displayCart() {
     }
 
     productElement.querySelector('.remove-from-cart').onclick = async () => {
-      await fetchUrl('/cart/delete', 'POST', { productId: product.id })
+      const res = await fetchUrl('/cart/delete', 'POST', {
+        productId: product.id,
+      })
+      if (!res) {
+        showNotification('Error removing from cart', 'error')
+        return
+      }
+
       await displayCart()
     }
     cartItemList.appendChild(productElement)

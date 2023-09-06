@@ -2,8 +2,12 @@ const userListContainer = document.getElementById('userList')
 
 async function fetchUsers() {
   try {
-    const response = await fetchUrl('/users', 'GET')
-    const users = await response.json()
+    const res = await fetchUrl('/users', 'GET')
+    if (!res) {
+      showNotification('Error fetching users', 'error')
+      return []
+    }
+    const users = await res.json()
     return users
   } catch (error) {
     return []
@@ -33,17 +37,25 @@ async function displayUsers() {
 
     const deleteButton = userElement.querySelector('.delete')
     deleteButton.addEventListener('click', async () => {
-      await fetchUrl(`/users/${user.id}`, 'DELETE')
+      const res = await fetchUrl(`/users/${user.id}`, 'DELETE')
+      if (!res) {
+        showNotification('Error deleting user', 'error')
+        return
+      }
+      showNotification('User deleted', 'success')
       displayUsers()
-      //TODO: alert
     })
     const isAdminCheckbox = userElement.querySelector('.isAdmin')
     isAdminCheckbox.checked = user.role.name === 'Admin'
     isAdminCheckbox.addEventListener('change', async () => {
-      await fetchUrl(`/users/${user.id}`, 'PUT', {
+      const res = await fetchUrl(`/users/${user.id}`, 'PUT', {
         role: isAdminCheckbox.checked ? 'Admin' : 'Customer', //TODO: constant
       })
-      //TODO: alert
+      if (!res) {
+        showNotification('Error updating user', 'error')
+        return
+      }
+      showNotification('User updated', 'success')
     })
   })
 }

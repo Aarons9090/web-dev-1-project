@@ -173,3 +173,24 @@ a.current {
   background-color: #ccc;
   cursor: pointer;
 }
+
+.notification {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.notification.success {
+  background-color: green;
+}
+
+.notification.error {
+  background-color: red;
+}
