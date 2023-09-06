@@ -155,7 +155,7 @@ function createEditContainer(product) {
   editContainer.style.display = 'none'
 
   const editNameField = createInput('text', product.name)
-  const editPriceField = createInput('text', product.price)
+  const editPriceField = createInput('number', product.price)
   const editDescriptionField = createInput('text', product.description)
   const deleteButton = document.createElement('button')
   deleteButton.textContent = 'Delete'
