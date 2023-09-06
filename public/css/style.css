@@ -194,3 +194,34 @@ a.current {
 .notification.error {
   background-color: red;
 }
+
+.form-container {
+  display: flex;
+  justify-content: center;
+
+  height: 1000px;
+}
+
+.form-container>form {
+  height: 300px;
+  margin: auto 0;
+}
+
+.username-input {
+  margin: 10px 0;
+  padding: 10px;
+}
+
+.password-input {
+  margin: 10px 0;
+  padding: 10px;
+}
+
+.form-main-action {
+  margin: 10px 0;
+  padding: 10px;
+  background-color: var(--primary-orange);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
