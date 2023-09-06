@@ -61,7 +61,9 @@ function handleRequest(req, res) {
 
     // Paths that require authentication
     // verify user token
-    getVerifiedToken(req, res)
+    if (!getVerifiedToken(req, res)) {
+      return
+    }
 
     // Users
     if (method === 'POST' && path === UserPath) {

@@ -39,17 +39,19 @@ function getVerifiedToken(req, res) {
   const authHeader = req.headers.authorization
   if (!authHeader || !authHeader.toLowerCase().startsWith('bearer ')) {
     respondJson(res, 401, { error: 'Token missing or invalid' })
-    return
+    return false
   }
   const token = authHeader.substring(7)
   try {
     const decodedToken = jwt.verify(token, config.SECRET)
     if (!decodedToken.id) {
       respondJson(res, 401, { error: 'Token missing or invalid' })
+      return false
     }
     return decodedToken
   } catch (error) {
     respondJson(res, 401, { error: 'Token missing or invalid' })
+    return false
   }
 }
 
