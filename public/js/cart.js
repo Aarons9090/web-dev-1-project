@@ -41,6 +41,10 @@ async function displayCart() {
 
   // checkout cart
   cartContainer.querySelector('.checkout').onclick = async () => {
+    if (cartItems.length === 0) {
+      showNotification('Cart is empty', 'error')
+      return
+    }
     const res = await fetchUrl('/cart/checkout', 'POST')
 
     if (!res) {
