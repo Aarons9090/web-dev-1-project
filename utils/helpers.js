@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const config = require('./config')
 const jwt = require('jsonwebtoken')
+const { logger } = require('./middleware')
 
 async function getRequestBodyJson(req) {
   return new Promise((resolve, reject) => {
@@ -62,14 +63,10 @@ function loadDb() {
       useUnifiedTopology: true,
     })
     .then(() => {
-      //TODO: logger middleware
-      // eslint-disable-next-line no-console
-      console.log('Connected to MongoDB')
+      logger('Connected to MongoDB')
     })
     .catch((error) => {
-      //TODO: logger middleware
-      // eslint-disable-next-line no-console
-      console.error('Error connecting to MongoDB:', error.message)
+      logger('Error connecting to MongoDB:', error.message)
     })
 }
 

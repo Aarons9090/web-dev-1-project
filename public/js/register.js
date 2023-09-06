@@ -2,27 +2,22 @@ const usernameInput = document.getElementById('username')
 const passwordInput = document.getElementById('password')
 
 async function register() {
-  try {
-    const response = await fetchUrl(
-      '/register',
-      'POST',
-      {
-        username: usernameInput.value,
-        password: passwordInput.value,
-      },
-      false
-    )
-    const user = await response.json()
+  const response = await fetchUrl(
+    '/register',
+    'POST',
+    {
+      username: usernameInput.value,
+      password: passwordInput.value,
+    },
+    false
+  )
 
-    if (user.error) {
-      console.log(user.error)
-      return
-    }
-
-    login()
-  } catch (error) {
-    console.log(error)
+  if (!response) {
+    showNotification('Error registering. Username must be unique', 'error')
+    return
   }
+
+  login()
 }
 
 document.getElementById('register').addEventListener('click', (event) => {

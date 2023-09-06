@@ -1,4 +1,4 @@
-const { loadDb, disconnectDb } = require('./utils/helpers')
+const { loadDb } = require('./utils/helpers')
 const Product = require('./models/Product')
 const Role = require('./models/role')
 const User = require('./models/user')
@@ -7,9 +7,6 @@ const Cart = require('./models/cart')
 const { default: mongoose } = require('mongoose')
 const bcrypt = require('bcrypt')
 const config = require('./utils/config')
-const ProductService = require('./services/ProductService')
-
-const productService = new ProductService()
 
 const mockProducts = [
   {
@@ -85,6 +82,7 @@ async function loadData() {
 
     await mongoose.disconnect()
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error loading data:', error)
   }
 }

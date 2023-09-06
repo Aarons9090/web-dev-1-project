@@ -9,12 +9,20 @@ function requestLogger(req, res, next) {
   })
 
   req.on('end', () => {
-    console.log(`[${new Date().toISOString()}] ${method} ${url}`)
-    requestBody && console.log('Request Body:', requestBody)
+    logger(`[${new Date().toISOString()}] ${method} ${url}`)
+    if (requestBody) {
+      logger(`Request body: ${requestBody}`)
+    }
   })
   next()
 }
 
+function logger(message) {
+  // add production check when neccecary
+  console.log(message)
+}
+
 module.exports = {
   requestLogger,
+  logger,
 }
