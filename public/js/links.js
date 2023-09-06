@@ -25,7 +25,6 @@ async function populateLinks(roleName) {
 
   linksContainer.appendChild(homeLink)
   linksContainer.appendChild(productsLink)
-  linksContainer.appendChild(ordersLink)
 
   if (isAdmin) {
     const usersLink = document.createElement('a')
@@ -46,6 +45,8 @@ async function populateLinks(roleName) {
     linksContainer.appendChild(cartLink)
     ordersLink.textContent = 'My Orders'
   }
+
+  linksContainer.appendChild(ordersLink)
 }
 
 window.addEventListener('load', async () => {
