@@ -49,7 +49,7 @@ async function displayUsers() {
     isAdminCheckbox.checked = user.role.name === 'Admin'
     isAdminCheckbox.addEventListener('change', async () => {
       const res = await fetchUrl(`/users/${user.id}`, 'PUT', {
-        role: isAdminCheckbox.checked ? 'Admin' : 'Customer', //TODO: constant
+        role: isAdminCheckbox.checked ? 'Admin' : 'Customer',
       })
       if (!res) {
         showNotification('Error updating user', 'error')
