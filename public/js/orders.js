@@ -81,8 +81,10 @@ async function displayOrders() {
       }
     })
     const total = order.products.reduce((total, item) => {
-      return total + item.product ? item.product.price * item.quantity : 0
+      if (!item.product) return total
+      return total + item.product.price * item.quantity
     }, 0)
+
     orderElement.querySelector('.total').textContent = `Total: ${total} €`
     orderList.appendChild(orderElement)
   })
