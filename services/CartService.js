@@ -6,6 +6,14 @@ const {
   getVerifiedToken,
 } = require('../utils/helpers')
 
+const {
+  InvalidToken,
+  ProductNotFound,
+  CartAddError,
+  CartDeleteError,
+  CartNotFoundError,
+} = require('../utils/constants').ErrorMessages
+
 class CartService {
   async getCart(req, res) {
     try {
@@ -25,7 +33,7 @@ class CartService {
       }
       respondJson(res, 200, cart)
     } catch (error) {
-      respondJson(res, 401, { error: 'Token missing or invalid' })
+      respondJson(res, 401, { error: InvalidToken })
       return
     }
   }
@@ -48,7 +56,7 @@ class CartService {
 
       const product = await Product.findById(productData.productId)
       if (!product) {
-        respondJson(res, 404, { error: 'Product not found' })
+        respondJson(res, 404, { error: ProductNotFound })
         return
       }
       //if product already in cart, increase quantity
@@ -70,7 +78,7 @@ class CartService {
       await cart.save()
       respondJson(res, 200, cart)
     } catch (error) {
-      respondJson(res, 401, { error: 'Token missing or invalid' })
+      respondJson(res, 401, { error: CartAddError })
       return
     }
   }
@@ -86,13 +94,13 @@ class CartService {
       const cart = await Cart.findOne({ user: decodedToken.id })
 
       if (!cart) {
-        respondJson(res, 404, { error: 'Cart not found' })
+        respondJson(res, 404, { error: CartDeleteError })
         return
       }
       const product = await Product.findById(productData.productId)
 
       if (!product) {
-        respondJson(res, 404, { error: 'Product not found' })
+        respondJson(res, 404, { error: CartDeleteError })
         return
       }
       //if product already in cart, decrease quantity
@@ -116,7 +124,7 @@ class CartService {
       await cart.save()
       respondJson(res, 200, cart)
     } catch (error) {
-      respondJson(res, 401, { error: 'Token missing or invalid' })
+      respondJson(res, 401, { error: CartDeleteError })
       return
     }
   }
@@ -129,7 +137,7 @@ class CartService {
       const cart = await Cart.findOne({ user: decodedToken.id })
 
       if (!cart) {
-        respondJson(res, 404, { error: 'Cart not found' })
+        respondJson(res, 404, { error: CartNotFoundError })
         return
       }
 
@@ -140,7 +148,7 @@ class CartService {
       await cart.save()
       respondJson(res, 200, cart)
     } catch (error) {
-      respondJson(res, 401, { error: 'Token missing or invalid' })
+      respondJson(res, 401, { error: CartDeleteError })
       return
     }
   }
@@ -150,14 +158,14 @@ class CartService {
       const decodedToken = getVerifiedToken(req, res)
       const cart = await Cart.findOne({ user: decodedToken.id })
       if (!cart) {
-        respondJson(res, 404, { error: 'Cart not found' })
+        respondJson(res, 404, { error: CartNotFoundError })
         return
       }
       cart.products = []
       await cart.save()
       respondJson(res, 200, cart)
     } catch (error) {
-      respondJson(res, 401, { error: 'Token missing or invalid' })
+      respondJson(res, 401, { error: CartDeleteError })
       return
     }
   }

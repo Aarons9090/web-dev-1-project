@@ -15,7 +15,7 @@ const {
   CartRemovePath,
   CartDeletePath,
   CartEmptyPath,
-} = require('./utils/constants')
+} = require('./utils/constants').Paths
 const url = require('url')
 const { respondJson, getVerifiedToken } = require('./utils/helpers')
 const UserService = require('./services/UserService')
@@ -66,9 +66,7 @@ function handleRequest(req, res) {
     }
 
     // Users
-    if (method === 'POST' && path === UserPath) {
-      await userService.createUser(req, res)
-    } else if (method === 'GET' && path === UserPath) {
+    if (method === 'GET' && path === UserPath) {
       await userService.getUsers(req, res)
     } else if (method === 'GET' && path.match(UserWithIdPath)) {
       await userService.getUserById(req, res)

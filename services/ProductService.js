@@ -6,6 +6,8 @@ const {
   respondJson,
 } = require('../utils/helpers')
 
+const { ProductNotFound } = require('../utils/constants').ErrorMessages
+
 class ProductService {
   async getProducts(req, res) {
     try {
@@ -22,7 +24,7 @@ class ProductService {
       const product = await Product.findById(id)
 
       if (!product) {
-        respondJson(res, 404, { error: 'Product not found' })
+        respondJson(res, 404, { error: ProductNotFound })
         return
       }
       respondJson(res, 200, product)
@@ -60,7 +62,7 @@ class ProductService {
       })
 
       if (!product) {
-        respondJson(res, 404, { error: 'Product not found' })
+        respondJson(res, 404, { error: ProductNotFound })
         return
       }
       respondJson(res, 200, product)
@@ -75,7 +77,7 @@ class ProductService {
       const product = await Product.findByIdAndDelete(id)
 
       if (!product) {
-        respondJson(res, 404, { error: 'Product not found' })
+        respondJson(res, 404, { error: ProductNotFound })
         return
       }
       respondJson(res, 200, null)

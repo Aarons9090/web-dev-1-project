@@ -5,6 +5,8 @@ const {
   getIdFromUrl,
   respondJson,
 } = require('../utils/helpers')
+const { UserNotFound, RoleNotFound } =
+  require('../utils/constants').ErrorMessages
 
 class UserService {
   async getUsers(req, res) {
@@ -28,36 +30,10 @@ class UserService {
       const user = await User.findById(id).populate('role')
 
       if (!user) {
-        respondJson(res, 404, { error: 'User not found' })
+        respondJson(res, 404, { error: UserNotFound })
         return
       }
       respondJson(res, 200, user)
-    } catch (error) {
-      respondJson(res, 400, { error: error.message })
-    }
-  }
-
-  // not used
-  async createUser(req, res) {
-    try {
-      const userData = await getRequestBodyJson(req)
-
-      const { username, password, roleName } = userData
-      const userRole = await Role.findOne({ name: roleName })
-
-      if (!userRole) {
-        respondJson(res, 400, { error: 'Role not found' })
-        return
-      }
-
-      const newUser = new User({
-        username: username,
-        password: password,
-        role: userRole.id,
-      })
-
-      const savedUser = await (await newUser.populate('role')).save()
-      respondJson(res, 201, savedUser)
     } catch (error) {
       respondJson(res, 400, { error: error.message })
     }
@@ -71,7 +47,7 @@ class UserService {
       const role = await Role.findOne({ name: userData.role })
 
       if (!role) {
-        respondJson(res, 400, { error: 'Role not found' })
+        respondJson(res, 400, { error: RoleNotFound })
         return
       }
       const user = await User.findByIdAndUpdate(
@@ -83,7 +59,7 @@ class UserService {
       ).populate('role')
 
       if (!user) {
-        respondJson(res, 404, { error: 'User not found' })
+        respondJson(res, 404, { error: UserNotFound })
         return
       }
       respondJson(res, 200, user)

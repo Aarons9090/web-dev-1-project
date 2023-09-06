@@ -9,6 +9,8 @@ const {
   getVerifiedToken,
 } = require('../utils/helpers')
 const { WebTokenExpirationSeconds } = require('../utils/constants')
+const { InvalidCredentials, UserExists, UserCreationError, InvalidToken } =
+  require('../utils/constants').ErrorMessages
 
 class AuthService {
   async login(req, res) {
@@ -23,7 +25,7 @@ class AuthService {
 
       if (!user) {
         respondJson(res, 400, {
-          error: 'User not found',
+          error: InvalidCredentials,
         })
         return
       }
@@ -32,7 +34,7 @@ class AuthService {
 
       if (!passwordCorrect) {
         respondJson(res, 401, {
-          error: 'Invalid password',
+          error: InvalidCredentials,
         })
         return
       }
@@ -66,7 +68,7 @@ class AuthService {
 
       if (!username || !password) {
         respondJson(res, 400, {
-          error: 'Username and password are required',
+          error: InvalidCredentials,
         })
         return
       }
@@ -77,7 +79,7 @@ class AuthService {
 
       if (existingUser) {
         respondJson(res, 400, {
-          error: 'Username already exists',
+          error: UserExists,
         })
         return
       }
@@ -88,7 +90,7 @@ class AuthService {
 
       if (!userRole) {
         respondJson(res, 503, {
-          error: 'Error creating user',
+          error: UserCreationError,
         })
         return
       }
@@ -109,19 +111,18 @@ class AuthService {
     }
   }
 
-  //TODO: yhteiset errorit
   async getUserRole(req, res) {
     try {
       const decodedToken = getVerifiedToken(req, res)
 
       const user = await User.findById(decodedToken.id).populate('role')
       if (!user) {
-        respondJson(res, 401, { error: 'Token missing or invalid' })
+        respondJson(res, 401, { error: InvalidToken })
         return
       }
       respondJson(res, 200, { role: user.role.name })
     } catch (error) {
-      respondJson(res, 401, { error: 'Token missing or invalid' })
+      respondJson(res, 401, { error: InvalidToken })
       return
     }
   }

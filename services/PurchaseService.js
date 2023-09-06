@@ -1,6 +1,8 @@
 const Cart = require('../models/cart')
 const Purchase = require('../models/purchase')
 const { respondJson, getVerifiedToken } = require('../utils/helpers')
+const { PurchasesNotFound, PurchasesError } =
+  require('../utils/constants').ErrorMessages
 
 class PurchaseService {
   async getAllPurchases(req, res) {
@@ -23,12 +25,12 @@ class PurchaseService {
       )
 
       if (!purchases) {
-        respondJson(res, 404, { error: 'Purchase not found' })
+        respondJson(res, 404, { error: PurchasesNotFound })
         return
       }
       respondJson(res, 200, purchases)
     } catch (error) {
-      respondJson(res, 401, { error: 'Token missing or invalid' })
+      respondJson(res, 401, { error: PurchasesError })
       return
     }
   }
