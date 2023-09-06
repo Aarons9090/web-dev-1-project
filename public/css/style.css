@@ -83,9 +83,53 @@ a.current {
   padding: 20px;
 }
 
-.users-container {
+.container {
   margin: 50px;
 }
+
+.main-content {
+  display: flex;
+  justify-content: center;
+  margin: 50px;
+}
+
+.left-container,
+.right-container {
+
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+}
+
+.main-image,
+.secondary-image {
+  width: 100%;
+  max-width: 600px;
+}
+
+.welcome-title {
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--primary-orange);
+  margin-top: 10px;
+}
+
+.subtitle {
+  color: rgb(60, 60, 60);
+  padding-bottom: 30px;
+}
+
+.shop-now {
+  background-color: var(--primary-orange);
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-top: 20px;
+  cursor: pointer;
+  width: 300px;
+  font-size: larger;
+}
+
 
 .notification {
   display: none;
