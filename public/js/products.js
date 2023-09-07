@@ -148,6 +148,15 @@ function createProductElement(product, isAdmin) {
     window.history.pushState(product.id, '', `/products/${product.id}`)
     displaySingleProduct()
   }
+  productPrice.onclick = () => {
+    window.history.pushState(product.id, '', `/products/${product.id}`)
+    displaySingleProduct()
+  }
+  productDescription.onclick = () => {
+    window.history.pushState(product.id, '', `/products/${product.id}`)
+    displaySingleProduct()
+  }
+
   return productElement
 }
 

@@ -47,6 +47,14 @@
   cursor: pointer;
 }
 
+.product-price {
+  cursor: pointer;
+}
+
+.product-description {
+  cursor: pointer;
+}
+
 .product-actions {
   display: flex;
   justify-content: space-between;
