@@ -1,0 +1,8 @@
+# flyctl launch added from .gitignore
+**\node_modules
+**\.env
+**\.prettierrc
+**\.eslintrc*
+**\package-lock.json
+**\*.txt
+fly.toml

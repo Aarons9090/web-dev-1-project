@@ -23,18 +23,18 @@ async function populateLinks(roleName) {
   homeLink.textContent = 'Home'
 
   const productsLink = document.createElement('a')
-  productsLink.href = '/products'
+  productsLink.href = '/products.html'
   productsLink.textContent = 'Products'
 
   const ordersLink = document.createElement('a')
-  ordersLink.href = '/orders'
+  ordersLink.href = '/orders.html'
 
   // add current class tag if on current page
-  if (currentPath === '/') {
+  if (currentPath === '/' || currentPath === '/index.html') {
     homeLink.classList.add('current')
-  } else if (currentPath === '/products') {
+  } else if (currentPath === '/products.html') {
     productsLink.classList.add('current')
-  } else if (currentPath === '/orders') {
+  } else if (currentPath === '/orders.html') {
     ordersLink.classList.add('current')
   }
 
@@ -43,9 +43,9 @@ async function populateLinks(roleName) {
 
   if (isAdmin) {
     const usersLink = document.createElement('a')
-    usersLink.href = '/users'
+    usersLink.href = '/users.html'
     usersLink.textContent = 'Users'
-    if (currentPath === '/users') {
+    if (currentPath === '/users.html') {
       usersLink.classList.add('current')
     }
     linksContainer.appendChild(usersLink)
@@ -58,10 +58,10 @@ async function populateLinks(roleName) {
     cartQuantity.textContent = await getCartQuantity()
     const cartLink = document.createElement('a')
     cartLinkDiv.onclick = () => {
-      window.location.href = '/cart'
+      window.location.href = '/cart.html'
     }
     cartLink.textContent = 'Cart'
-    if (currentPath === '/cart') {
+    if (currentPath === '/cart.html') {
       cartLink.classList.add('current')
     }
     cartLinkDiv.appendChild(cartLink)

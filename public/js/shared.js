@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
-const baseUrl = 'http://127.0.0.1:3000/api'
+const baseUrl = '/api'
 
 async function fetchUrl(url, method, body = null, isAuthenticated = true) {
   try {

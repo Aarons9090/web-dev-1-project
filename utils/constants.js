@@ -37,6 +37,7 @@ module.exports = {
     PurchasesNotFound: 'Purchases not found',
     PurchasesError: 'Error getting purchases',
     RoleNotFound: 'Role not found',
+    NotFound: 'Not found',
   },
   WebTokenExpirationSeconds: 60 * 60,
 }

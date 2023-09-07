@@ -1,5 +1,5 @@
 const { loadDb } = require('./utils/helpers')
-const Product = require('./models/Product')
+const Product = require('./models/product')
 const Role = require('./models/role')
 const User = require('./models/user')
 const Purchase = require('./models/purchase')

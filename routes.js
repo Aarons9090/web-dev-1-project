@@ -1,4 +1,6 @@
 const { requestLogger } = require('./utils/middleware')
+const path = require('path')
+const fs = require('fs')
 const {
   UserWithIdPath,
   UserPath,
@@ -16,7 +18,7 @@ const {
   CartDeletePath,
   CartEmptyPath,
 } = require('./utils/constants').Paths
-const url = require('url')
+const { NotFound, InvalidToken } = require('./utils/constants').ErrorMessages
 const { respondJson, getVerifiedToken } = require('./utils/helpers')
 const UserService = require('./services/UserService')
 const ProductService = require('./services/ProductService')
@@ -32,90 +34,133 @@ const purchaseService = new PurchaseService()
 
 function handleRequest(req, res) {
   requestLogger(req, res, async () => {
-    const { path } = url.parse(req.url, true)
     const { method } = req
 
-    res.setHeader('Content-Type', 'application/json')
+    const requestedUrl = req.url === '/' ? '/index.html' : req.url
 
-    res.setHeader(
-      'Access-Control-Allow-Headers',
-      'Content-Type,Accept,Authorization'
-    )
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE')
-    res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:8080')
+    // Route api calls
+    if (requestedUrl.startsWith('/api')) {
+      res.setHeader('Content-Type', 'application/json')
 
-    // Paths that don't require authentication
-    if (method === 'OPTIONS') {
-      res.writeHead(200)
-      res.end()
-      return
-    }
+      res.setHeader(
+        'Access-Control-Allow-Headers',
+        'Content-Type,Accept,Authorization'
+      )
+      res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE')
+      //TODO: cors?
 
-    if (method === 'POST' && path === LoginPath) {
-      await authService.login(req, res)
-      return
-    } else if (method === 'POST' && path === RegisterPath) {
-      await authService.register(req, res)
-      return
-    }
+      // Paths that don't require authentication
+      if (method === 'OPTIONS') {
+        res.writeHead(200)
+        res.end()
+        return
+      }
 
-    // Paths that require authentication
-    // verify user token
-    if (!getVerifiedToken(req, res)) {
-      return
-    }
+      if (method === 'POST' && requestedUrl === LoginPath) {
+        await authService.login(req, res)
+        return
+      } else if (method === 'POST' && requestedUrl === RegisterPath) {
+        await authService.register(req, res)
+        return
+      }
 
-    // Users
-    if (method === 'GET' && path === UserPath) {
-      await userService.getUsers(req, res)
-    } else if (method === 'GET' && path.match(UserWithIdPath)) {
-      await userService.getUserById(req, res)
-    } else if (method === 'PUT' && path.match(UserWithIdPath)) {
-      await userService.updateUser(req, res)
-    } else if (method === 'DELETE' && path.match(UserWithIdPath)) {
-      await userService.deleteUser(req, res)
-    }
-    // Products
-    else if (method === 'GET' && path === ProductPath) {
-      await productService.getProducts(req, res)
-    } else if (method === 'GET' && path.match(ProductWithIdPath)) {
-      await productService.getProductById(req, res)
-    } else if (method === 'POST' && path === ProductPath) {
-      await productService.createProduct(req, res)
-    } else if (method === 'PUT' && path.match(ProductWithIdPath)) {
-      await productService.updateProduct(req, res)
-    } else if (method === 'DELETE' && path.match(ProductWithIdPath)) {
-      await productService.deleteProduct(req, res)
-    }
+      // Paths that require authentication
+      // verify user token
+      if (!getVerifiedToken(req, res)) {
+        respondJson(res, 401, { error: InvalidToken })
+        return
+      }
 
-    //Auth
-    else if (method === 'GET' && path === RolePath) {
-      await authService.getUserRole(req, res)
-    }
+      // Users
+      if (method === 'GET' && requestedUrl === UserPath) {
+        await userService.getUsers(req, res)
+      } else if (method === 'GET' && requestedUrl.match(UserWithIdPath)) {
+        await userService.getUserById(req, res)
+      } else if (method === 'PUT' && requestedUrl.match(UserWithIdPath)) {
+        await userService.updateUser(req, res)
+      } else if (method === 'DELETE' && requestedUrl.match(UserWithIdPath)) {
+        await userService.deleteUser(req, res)
+      }
+      // Products
+      else if (method === 'GET' && requestedUrl === ProductPath) {
+        await productService.getProducts(req, res)
+      } else if (method === 'GET' && requestedUrl.match(ProductWithIdPath)) {
+        await productService.getProductById(req, res)
+      } else if (method === 'POST' && requestedUrl === ProductPath) {
+        await productService.createProduct(req, res)
+      } else if (method === 'PUT' && requestedUrl.match(ProductWithIdPath)) {
+        await productService.updateProduct(req, res)
+      } else if (method === 'DELETE' && requestedUrl.match(ProductWithIdPath)) {
+        await productService.deleteProduct(req, res)
+      }
 
-    //Cart
-    else if (method === 'GET' && path === CartPath) {
-      await cartService.getCart(req, res)
-    } else if (method === 'POST' && path === CartAddPath) {
-      await cartService.addToCart(req, res)
-    } else if (method === 'POST' && path === CartRemovePath) {
-      await cartService.removeFromCart(req, res)
-    } else if (method === 'POST' && path === CartDeletePath) {
-      await cartService.deleteFromCart(req, res)
-    } else if (method === 'POST' && path === CartEmptyPath) {
-      await cartService.emptyCart(req, res)
-    }
-    // Purchases
-    else if (method === 'POST' && path === CheckoutPath) {
-      await purchaseService.checkout(req, res)
-    } else if (method === 'GET' && path === PurchasesPath) {
-      await purchaseService.getAllPurchases(req, res)
-    } else if (method === 'GET' && path === PurchasesPathUser) {
-      await purchaseService.getUserPurchases(req, res)
+      //Auth
+      else if (method === 'GET' && requestedUrl === RolePath) {
+        await authService.getUserRole(req, res)
+      }
+
+      //Cart
+      else if (method === 'GET' && requestedUrl === CartPath) {
+        await cartService.getCart(req, res)
+      } else if (method === 'POST' && requestedUrl === CartAddPath) {
+        await cartService.addToCart(req, res)
+      } else if (method === 'POST' && requestedUrl === CartRemovePath) {
+        await cartService.removeFromCart(req, res)
+      } else if (method === 'POST' && requestedUrl === CartDeletePath) {
+        await cartService.deleteFromCart(req, res)
+      } else if (method === 'POST' && requestedUrl === CartEmptyPath) {
+        await cartService.emptyCart(req, res)
+      }
+      // Purchases
+      else if (method === 'POST' && requestedUrl === CheckoutPath) {
+        await purchaseService.checkout(req, res)
+      } else if (method === 'GET' && requestedUrl === PurchasesPath) {
+        await purchaseService.getAllPurchases(req, res)
+      } else if (method === 'GET' && requestedUrl === PurchasesPathUser) {
+        await purchaseService.getUserPurchases(req, res)
+      } else {
+        respondJson(res, 404, { error: NotFound })
+      }
     } else {
-      respondJson(res, 404, { error: 'Route not found' })
+      // Route static files
+      const staticDir = path.join(__dirname, 'public')
+      const filePath = path.join(staticDir, requestedUrl)
+
+      if (fs.existsSync(filePath)) {
+        fs.readFile(filePath, (err, data) => {
+          if (err) {
+            res.writeHead(500)
+            res.end('Internal Server Error')
+          } else {
+            res.writeHead(200, { 'Content-Type': getContentType(filePath) })
+            res.end(data)
+          }
+        })
+      } else {
+        res.writeHead(404)
+        res.end('Not Found')
+      }
     }
   })
+}
+
+function getContentType(filePath) {
+  const extname = path.extname(filePath)
+  switch (extname) {
+    case '.html':
+      return 'text/html'
+    case '.css':
+      return 'text/css'
+    case '.js':
+      return 'text/javascript'
+    case '.jpg':
+    case '.jpeg':
+      return 'image/jpeg'
+    case '.png':
+      return 'image/png'
+    default:
+      return 'application/octet-stream'
+  }
 }
 
 module.exports = handleRequest

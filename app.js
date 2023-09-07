@@ -4,7 +4,7 @@ const config = require('./utils/config')
 const handleRequest = require('./routes')
 const { loadDb } = require('./utils/helpers')
 
-const hostname = '127.0.0.1'
+const hostname = '0.0.0.0'
 const port = config.PORT
 
 loadDb()
