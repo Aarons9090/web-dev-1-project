@@ -9,6 +9,7 @@
   padding: 5px;
   border-radius: 5px;
   margin: 10px;
+  cursor: pointer;
 }
 
 .checkout {
@@ -18,6 +19,7 @@
   padding: 5px;
   border-radius: 5px;
   margin: 10px;
+  cursor: pointer;
 }
 
 .cart-item {
