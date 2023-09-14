@@ -166,8 +166,8 @@ function handleRequest(req, res) {
           }
         })
       } else {
-        res.writeHead(404)
-        res.end('Not Found')
+        res.writeHead(404, { 'Content-Type': 'text/html' })
+        res.end('<h1>This page could not be found</h1><a href="/">Home</a')
       }
     }
   })
