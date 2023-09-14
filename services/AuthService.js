@@ -21,7 +21,7 @@ class AuthService {
 
       const user = await User.findOne({
         username,
-      })
+      }).populate('role')
 
       if (!user) {
         respondJson(res, 400, {
@@ -42,6 +42,7 @@ class AuthService {
       const userForToken = {
         username: user.username,
         id: user._id,
+        roleName: user.role.name,
       }
 
       const token = jwt.sign(userForToken, config.SECRET, {

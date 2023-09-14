@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const config = require('./config')
 const jwt = require('jsonwebtoken')
 const { logger } = require('./middleware')
+const { ROLES } = require('./constants')
 
 async function getRequestBodyJson(req) {
   return new Promise((resolve, reject) => {
@@ -70,10 +71,15 @@ function loadDb() {
     })
 }
 
+function isAdmin(decodedToken) {
+  return decodedToken.roleName === ROLES.ADMIN
+}
+
 module.exports = {
   getRequestBodyJson,
   getIdFromUrl,
   respondJson,
   loadDb,
   getVerifiedToken,
+  isAdmin,
 }

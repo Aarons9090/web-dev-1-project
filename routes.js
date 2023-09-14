@@ -18,8 +18,8 @@ const {
   CartDeletePath,
   CartEmptyPath,
 } = require('./utils/constants').Paths
-const { NotFound, InvalidToken } = require('./utils/constants').ErrorMessages
-const { respondJson, getVerifiedToken } = require('./utils/helpers')
+const { NotFound } = require('./utils/constants').ErrorMessages
+const { respondJson, getVerifiedToken, isAdmin } = require('./utils/helpers')
 const UserService = require('./services/UserService')
 const ProductService = require('./services/ProductService')
 const AuthService = require('./services/AuthService')
@@ -44,10 +44,9 @@ function handleRequest(req, res) {
 
       res.setHeader(
         'Access-Control-Allow-Headers',
-        'Content-Type,Accept,Authorization'
+        'Content-Type,Accept,Authorization, Origin'
       )
       res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE')
-      //TODO: cors?
 
       // Paths that don't require authentication
       if (method === 'OPTIONS') {
@@ -66,19 +65,33 @@ function handleRequest(req, res) {
 
       // Paths that require authentication
       // verify user token
-      if (!getVerifiedToken(req, res)) {
-        respondJson(res, 401, { error: InvalidToken })
+      const decodedToken = getVerifiedToken(req, res)
+      if (!decodedToken) {
         return
       }
 
+      const isAdminAuth = isAdmin(decodedToken)
+
       // Users
-      if (method === 'GET' && requestedUrl === UserPath) {
+      if (method === 'GET' && requestedUrl === UserPath && isAdminAuth) {
         await userService.getUsers(req, res)
-      } else if (method === 'GET' && requestedUrl.match(UserWithIdPath)) {
+      } else if (
+        method === 'GET' &&
+        requestedUrl.match(UserWithIdPath) &&
+        isAdminAuth
+      ) {
         await userService.getUserById(req, res)
-      } else if (method === 'PUT' && requestedUrl.match(UserWithIdPath)) {
+      } else if (
+        method === 'PUT' &&
+        requestedUrl.match(UserWithIdPath) &&
+        isAdminAuth
+      ) {
         await userService.updateUser(req, res)
-      } else if (method === 'DELETE' && requestedUrl.match(UserWithIdPath)) {
+      } else if (
+        method === 'DELETE' &&
+        requestedUrl.match(UserWithIdPath) &&
+        isAdminAuth
+      ) {
         await userService.deleteUser(req, res)
       }
       // Products
@@ -86,11 +99,23 @@ function handleRequest(req, res) {
         await productService.getProducts(req, res)
       } else if (method === 'GET' && requestedUrl.match(ProductWithIdPath)) {
         await productService.getProductById(req, res)
-      } else if (method === 'POST' && requestedUrl === ProductPath) {
+      } else if (
+        method === 'POST' &&
+        requestedUrl === ProductPath &&
+        isAdminAuth
+      ) {
         await productService.createProduct(req, res)
-      } else if (method === 'PUT' && requestedUrl.match(ProductWithIdPath)) {
+      } else if (
+        method === 'PUT' &&
+        requestedUrl.match(ProductWithIdPath) &&
+        isAdminAuth
+      ) {
         await productService.updateProduct(req, res)
-      } else if (method === 'DELETE' && requestedUrl.match(ProductWithIdPath)) {
+      } else if (
+        method === 'DELETE' &&
+        requestedUrl.match(ProductWithIdPath) &&
+        isAdminAuth
+      ) {
         await productService.deleteProduct(req, res)
       }
 
@@ -114,7 +139,11 @@ function handleRequest(req, res) {
       // Purchases
       else if (method === 'POST' && requestedUrl === CheckoutPath) {
         await purchaseService.checkout(req, res)
-      } else if (method === 'GET' && requestedUrl === PurchasesPath) {
+      } else if (
+        method === 'GET' &&
+        requestedUrl === PurchasesPath &&
+        isAdminAuth
+      ) {
         await purchaseService.getAllPurchases(req, res)
       } else if (method === 'GET' && requestedUrl === PurchasesPathUser) {
         await purchaseService.getUserPurchases(req, res)
