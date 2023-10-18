@@ -9,6 +9,12 @@ The project was done in one week and no external modules were allowed so the cod
 A live demo can be found here
 https://store-app-project.fly.dev/login.html
 
+Demo users:
+user:user
+admin:admin
+
+or register your own account (Don't worry, passwords are hashed and salted).
+
 ## Requirements
 
 - Register and login as Customer
